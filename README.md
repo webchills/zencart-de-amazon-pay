@@ -17,13 +17,13 @@ Das Modul kann zunächst mit einem Sandbox Account vollständig ohne echte Trans
 
 Voraussetzungen:
 
-*Zen Cart 1.5.5 deutsch
-*Shop verwendet durchgehend SSL
-*Firma des Shopinhabers hat Sitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien
-*Amazon Seller Account
-*Amazon Payments Konto
-*Login mit Amazon ID und andere Kennungen erstellt
-*(siehe beiliegendes pdf Wie-bekomme-und-nutze-ich-meine-Login-mit-AmazonClient-ID.pdf)
+* Zen Cart 1.5.5 deutsch
+* Shop verwendet durchgehend SSL
+* Firma des Shopinhabers hat Sitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien
+* Amazon Seller Account
+* Amazon Payments Konto
+* Login mit Amazon ID und andere Kennungen erstellt
+* (siehe beiliegendes pdf Wie-bekomme-und-nutze-ich-meine-Login-mit-AmazonClient-ID.pdf)
 
 Copyright, Lizenz, Changelog
 
@@ -39,14 +39,14 @@ www.webiprog.de
 
 Änderungen/Fehlerbehebungen gegenüber der Original Version 1.0:
 
-*Unterstützung der in Zen Cart 1.5.5 verwendeten mehrsprachigen Ländernamen
-*Anpassung der Dateien an die deutsche Zen Cart Version 1.5.5
-*Kundenkommentare in der Bestellung werden übernommen
-*Firmennamen aus dem Amazon Adressbuch werden korrekt übernommen
-*Um zu verhindern, dass Kunden nach abgebrochener Amazon Zahlung mit unvollständigen Kundendaten mit einer anderen Zahlungsart zur Kasse gehen, werden Kunden mit fehlenden Stammdaten zuerst zur Accountseite geleitet, um ihre Daten zu aktualisieren
-*Entfernen des von Amazon hinterlegten Bundeslandes nach erfolgreicher Amazonzahlung um Schwierigkeiten mit PayPal bei künftigen Bestellungen zu verhindern
-*Konfigurationsoptionen auf deutsch hinterlegt
-*Anleitung aktualisiert
+* Unterstützung der in Zen Cart 1.5.5 verwendeten mehrsprachigen Ländernamen
+* Anpassung der Dateien an die deutsche Zen Cart Version 1.5.5
+* Kundenkommentare in der Bestellung werden übernommen
+* Firmennamen aus dem Amazon Adressbuch werden korrekt übernommen
+* Um zu verhindern, dass Kunden nach abgebrochener Amazon Zahlung mit unvollständigen Kundendaten mit einer anderen Zahlungsart zur Kasse gehen, werden Kunden mit fehlenden Stammdaten zuerst zur Accountseite geleitet, um ihre Daten zu aktualisieren
+* Entfernen des von Amazon hinterlegten Bundeslandes nach erfolgreicher Amazonzahlung um Schwierigkeiten mit PayPal bei künftigen Bestellungen zu verhindern
+* Konfigurationsoptionen auf deutsch hinterlegt
+* Anleitung aktualisiert
 
 Portions Copyright (c) 2003 osCommerce
 Portions Copyright (c) 2003-2017 Zen Cart
