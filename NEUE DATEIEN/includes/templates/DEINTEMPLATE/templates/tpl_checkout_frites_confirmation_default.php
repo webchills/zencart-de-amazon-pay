@@ -7,17 +7,17 @@
  *
  * @package templateSystem
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_confirmation_default.php for Amazon Pay 2017-11-15 20:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_confirmation_default.php 2018-01-07 17:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
 
 <h1 id="checkoutConfirmDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 <div id="conditionslaststep"><?php echo TEXT_ZUSATZ_SCHRITT3; ?><br/><?php echo TEXT_CONDITIONS_ACCEPTED_IN_LAST_STEP; ?></div>
-
+<br/>
 <?php if ($messageStack->size('redemptions') > 0) echo $messageStack->output('redemptions'); ?>
 <?php if ($messageStack->size('checkout_confirmation') > 0) echo $messageStack->output('checkout_confirmation'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>

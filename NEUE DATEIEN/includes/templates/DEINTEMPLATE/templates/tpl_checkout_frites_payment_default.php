@@ -7,10 +7,10 @@
  *
  * @package templateSystem
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_payment_default.php for Amazon Pay 2017-11-15 20:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_payment_default.php 2018-01-06 14:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutPayment">
@@ -24,7 +24,18 @@
 <?php if ($messageStack->size('checkout_payment') > 0) echo $messageStack->output('checkout_payment'); ?>
 
 <?php //echo '<pre>'.__METHOD__.' ['.__LINE__.']: ';print_r($_SESSION['frites']);echo '</pre>'; ?>
-
+<?php
+  if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
+?>
+<fieldset>
+<legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
+<div><?php echo TEXT_CONDITIONS_DESCRIPTION;?></div>
+<?php echo  zen_draw_checkbox_field('conditions', '1', false, 'id="conditions"');?>
+<label class="checkboxLabel" for="conditions"><?php echo TEXT_CONDITIONS_CONFIRM; ?></label>
+</fieldset>
+<?php
+  }
+?>
 <input id="fritesOrderReferenceId" type="hidden" name="frites[OrderReferenceId]" value="<?php echo isset($_SESSION['frites']['OrderReferenceId']) ? $_SESSION['frites']['OrderReferenceId'] : '' ?>" />
 <div align="center">
 <script type='text/javascript'>
@@ -83,18 +94,7 @@
 	}).bind("walletWidgetDiv");
 </script>
 </div>
-<?php
-  if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-?>
-<fieldset>
-<legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
-<div><?php echo TEXT_CONDITIONS_DESCRIPTION;?></div>
-<?php echo  zen_draw_checkbox_field('conditions', '1', TRUE, 'id="conditions"');?>
-<label class="checkboxLabel" for="conditions"><?php echo TEXT_CONDITIONS_CONFIRM; ?></label>
-</fieldset>
-<?php
-  }
-?>
+
 
 <fieldset id="checkoutOrderTotals">
 <legend id="checkoutPaymentHeadingTotal"><?php echo TEXT_YOUR_TOTAL; ?></legend>

@@ -1,12 +1,12 @@
 <?php
 /**
- * checkout_frites_confirmation header_php.php with comments fix
+ * checkout_frites_confirmation header_php.php 
  *
  * @package Amazon Pay for Zen Cart German
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 2017-10-16 20:29:16Z webchills $
+ * @version $Id: header_php.php 2018-01-06 14:29:16Z webchills $
  */
 
 // This should be first line of the script:
@@ -68,14 +68,13 @@ if (isset($_POST['comments'])) $_SESSION['comments'] = $_POST['comments'];
 //'checkout_payment_discounts'
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 
-//fixed by oppo webiprog.com  (oleg@webiprog.com)
-/*
-if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-  if (!isset($_POST['conditions']) || ($_POST['conditions'] != '1')) {
+if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') { 
+	
+ if ($_SESSION['conditions'] != 'accepted'){
     $messageStack->add_session('checkout_payment', ERROR_CONDITIONS_NOT_ACCEPTED, 'error');
+    zen_redirect($links['checkout_frites_payment']);
   }
 }
-*/
 //echo $messageStack->size('checkout_payment');
 if (!isset($order)) {
 	require_once(DIR_WS_CLASSES . 'order.php');

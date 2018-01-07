@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_shipping_default.php for Amazon Pay 2017-11-15 20:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_shipping_default.php 2018-01-06 14:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutShipping">
@@ -22,6 +22,7 @@
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 
 <?php //echo '<pre>'.__METHOD__.' ['.__LINE__.']: ';print_r($_SESSION['frites']);echo '</pre>'; ?>
+
 
 <input id="fritesOrderReferenceId" type="hidden" name="frites[OrderReferenceId]" value="<?php echo isset($_SESSION['frites']['OrderReferenceId'])?$_SESSION['frites']['OrderReferenceId']:'' ?>" />
 
@@ -284,9 +285,16 @@ function check_continue_box() {
 <legend><?php echo TABLE_HEADING_COMMENTS; ?></legend>
 <?php echo zen_draw_textarea_field('comments', '45', '3'); ?>
 </fieldset>
-<div id="continue-box" style="display:none">
+<?php if ($free_shipping == true) { ?>    
+<div id="continue-box-free" style="display:inline">
   <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT, 'id="checkout_by_frites_continue"'); ?></div>
   <div class="buttonRow back"><?php echo '<strong>' . TITLE_CONTINUE_CHECKOUT_PROCEDURE . '</strong><br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 </div>
+<?php } else { ?>
+    <div id="continue-box" style="display:none">
+  <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT, 'id="checkout_by_frites_continue"'); ?></div>
+  <div class="buttonRow back"><?php echo '<strong>' . TITLE_CONTINUE_CHECKOUT_PROCEDURE . '</strong><br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
+</div>
+<?php } ?>
 </form>
 </div>

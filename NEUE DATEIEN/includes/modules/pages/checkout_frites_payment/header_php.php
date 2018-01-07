@@ -28,6 +28,11 @@ if ($_SESSION['cart']->count_contents() <= 0) {
     zen_redirect(zen_href_link(FILENAME_TIME_OUT));
 }
 
+if (zen_not_null($_POST['conditions'])) {
+     $_SESSION['conditions'] = 'accepted';
+    }
+    
+
 /*if((!isset($_GET[PURCHANSE_CONTRACT_ID_PARAM_NAME]) || !$_GET[PURCHANSE_CONTRACT_ID_PARAM_NAME])
      || (!isset($_COOKIE[PURCHANSE_CONTRACT_ID_PARAM_NAME]) || !$_COOKIE[PURCHANSE_CONTRACT_ID_PARAM_NAME])
      || ($_COOKIE[PURCHANSE_CONTRACT_ID_PARAM_NAME] != $_GET[PURCHANSE_CONTRACT_ID_PARAM_NAME])) {*/
