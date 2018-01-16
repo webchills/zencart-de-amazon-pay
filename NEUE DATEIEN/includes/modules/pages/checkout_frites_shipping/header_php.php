@@ -2,10 +2,10 @@
 /**
  * @package Amazon Pay for Zen Cart German
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 2017-10-16 20:29:16Z webchills $
+ * @version $Id: header_php.php 2018-01-06 14:29:16Z webchills $
  */
  
 // This should be first line of the script:
@@ -201,16 +201,11 @@ if (isset($_SESSION['cart']->cartID)) {
 	zen_redirect(zen_href_link(FILENAME_TIME_OUT));
 }
 
-// if the order contains only virtual products, forward the customer to the billing page as
-// a shipping address is not needed
-if ($order->content_type == 'virtual') {
-	$_SESSION['shipping'] = array();
-	$_SESSION['shipping']['id'] = 'free_free';
-	$_SESSION['shipping']['title'] = 'free_free';
-	$_SESSION['sendto'] = false;
-	$_SESSION['frites']['shipping_selected'] = 1;
-	zen_redirect($links['checkout_frites_payment']);
-}
+// if the order contains only virtual products, forward the customer to the normal checkout as only physical goods are supported by this Amazon Pay module
+  if ($order->content_type == 'virtual') {
+    
+    zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+  }
 
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();

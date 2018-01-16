@@ -87,11 +87,14 @@ $lastname_query = $db->bindVars($lastname_query, ':customersID', $_SESSION['cust
     zen_redirect(zen_href_link(FILENAME_ACCOUNT_EDIT));
     }
     
-    // verify if street exists
+    // verify if street exists    
+    if (!$_SESSION['sendto']) {
+    $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+  }
     $street_query = "SELECT entry_street_address
                             FROM   " . TABLE_ADDRESS_BOOK . "
                             WHERE  customers_id = :customersID
-                            AND    address_book_id = 44";   
+                            AND    address_book_id = :addressBookID";   
                             
 $street_query = $db->bindVars($street_query, ':customersID', $_SESSION['customer_id'], 'integer');
 $street_query = $db->bindVars($street_query, ':addressBookID', $_SESSION['sendto'], 'integer');

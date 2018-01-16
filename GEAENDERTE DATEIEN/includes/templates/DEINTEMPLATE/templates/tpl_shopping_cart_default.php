@@ -6,10 +6,10 @@
  * Displays shopping-cart contents
  *
  * @package templateSystem
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_shopping_cart_default.php for Amazon Pay 2017-11-15 19:33:58Z webchills $
+ * @version $Id: tpl_shopping_cart_default.php for Amazon Pay 2018-01-16 17:33:58Z webchills $
  */
 ?>
 <div class="centerColumn" id="shoppingCartDefault">
@@ -186,10 +186,17 @@ if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATU
 <!-- ** END PAYPAL EXPRESS CHECKOUT ** -->
 
 <!-- ** BEGIN AMAZON FRITES LOGIN ** -->
-	<?php  // the tpl_login_button template only displays LOGIN option if cart contents >0 and value >0
+	<?php  // the tpl_login_button template only displays LOGIN option if cart contents > 0 and value > 0 and if there are no virtual products
+	
 	if (defined('MODULE_PAYMENT_FRITES_STATUS') && MODULE_PAYMENT_FRITES_STATUS == 'True') {
+		
+  if ($_SESSION['cart']->in_cart_check('products_virtual')) {
+  	//
+  } else {
 	  include(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_login_button.php');
 	}
+}
+
 	?>
 	<!-- ** END AMAZON FRITES LOGIN ** -->
 

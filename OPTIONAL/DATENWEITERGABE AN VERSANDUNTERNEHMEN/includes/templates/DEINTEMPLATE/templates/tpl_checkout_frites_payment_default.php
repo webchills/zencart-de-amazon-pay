@@ -10,10 +10,11 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_payment_default.php 2018-01-16 17:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_payment_default.php for Datenweitergabe an Transportunternehmen 2018-01-16 18:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutPayment">
+
 <?php echo zen_draw_form('checkout_payment', $links['checkout_frites_payment'], 'post'); ?>
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 
@@ -22,8 +23,6 @@
 <?php if ($messageStack->size('redemptions') > 0) echo $messageStack->output('redemptions'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 <?php if ($messageStack->size('checkout_payment') > 0) echo $messageStack->output('checkout_payment'); ?>
-
-<?php //echo '<pre>'.__METHOD__.' ['.__LINE__.']: ';print_r($_SESSION['frites']);echo '</pre>'; ?>
 <?php
   if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 ?>
@@ -36,6 +35,16 @@
 <?php
   }
 ?>
+<fieldset>
+<legend><?php echo TABLE_HEADING_CARRIER_FRITES; ?></legend>
+<div><?php echo TEXT_CARRIER_DESCRIPTION_FRITES;?></div>
+<?php echo  zen_draw_radio_field('carrier', 'ja', false, 'id="carrierja"');?>
+<label class="checkboxLabel" for="carrier"><?php echo TEXT_CARRIER_YES_FRITES; ?></label>
+<?php echo  zen_draw_radio_field('carrier', 'nein', false, 'id="carriernein"');?>
+<label class="checkboxLabel" for="carrier"><?php echo TEXT_CARRIER_NO_FRITES; ?></label>
+</fieldset>
+
+
 <input id="fritesOrderReferenceId" type="hidden" name="frites[OrderReferenceId]" value="<?php echo isset($_SESSION['frites']['OrderReferenceId']) ? $_SESSION['frites']['OrderReferenceId'] : '' ?>" />
 <div align="center">
 <script type='text/javascript'>
@@ -94,7 +103,6 @@
 	}).bind("walletWidgetDiv");
 </script>
 </div>
-
 
 <fieldset id="checkoutOrderTotals">
 <legend id="checkoutPaymentHeadingTotal"><?php echo TEXT_YOUR_TOTAL; ?></legend>

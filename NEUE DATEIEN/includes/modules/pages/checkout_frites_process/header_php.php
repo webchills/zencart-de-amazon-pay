@@ -2,13 +2,14 @@
 /**
  * @package Amazon Pay for Zen Cart German
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 2017-10-16 20:29:16Z webchills $
+ * @version $Id: header_php.php 2018-01-08 18:29:16Z webchills $
  */
 // This should be first line of the script:
-  $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_PROCESS');
+  
+  $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_PROCESS_FRITES');
 
   include_once zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'].'/','checkout_process.php', 'false');
 

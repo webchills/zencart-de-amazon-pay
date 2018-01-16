@@ -3,10 +3,10 @@
  * checkout_payment header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php for Amazon Pay 2017-11-16 09:49:16Z webchills $
+ * @version $Id: header_php.php for Amazon Pay 2018-01-16 17:49:16Z webchills $
  */
 
 // This should be first line of the script:
@@ -80,7 +80,10 @@ $lastname_query = $db->bindVars($lastname_query, ':customersID', $_SESSION['cust
     zen_redirect(zen_href_link(FILENAME_ACCOUNT_EDIT));
     }
     
-    // verify if street exists
+    // verify if street exists    
+    if (!$_SESSION['sendto']) {
+    $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+  }
     $street_query = "SELECT entry_street_address
                             FROM   " . TABLE_ADDRESS_BOOK . "
                             WHERE  customers_id = :customersID
@@ -95,6 +98,7 @@ $street_query = $db->bindVars($street_query, ':addressBookID', $_SESSION['sendto
        $messageStack->add_session('header', ERROR_NO_STREET_DEFINED, 'error');
     zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK));
     }
+//  }
 // Stock Check
 if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
   $products = $_SESSION['cart']->get_products();

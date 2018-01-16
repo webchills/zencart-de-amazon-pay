@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Login und Bezahlen via Amazon (Amazon Pay) 2.0.0 für Zen Cart 1.5.5 deutsch</title>
+<title>Login und Bezahlen via Amazon (Amazon Pay) 2.1.0 für Zen Cart 1.5.5 deutsch</title>
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="content-language" content="de">
@@ -12,7 +12,7 @@
 <body>
 <div id="wrapper">
 <div id="header">
-<h1>Login und Bezahlen via Amazon (Amazon Pay) 2.0.0 für Zen Cart 1.5.5 deutsch</h1>
+<h1>Login und Bezahlen via Amazon (Amazon Pay) 2.1.0 für Zen Cart 1.5.5 deutsch</h1>
 </div>
 
 <div id="slidetabsmenu" style="display: none;">
@@ -37,24 +37,26 @@
 
 <h2>Sinn und Zweck dieses Moduls</h2>
 
- Dieses Modul ermöglicht die Zahlungsart Amazon Pay in Ihrem Zen Cart Shop.<br>
- <br/>
-      Kunden können direkt mit ihrem Amazon Account zahlen und alle dort hinterlegten Zahlungsarten zu verwenden.<br/>
-      Wählt der Kunde Bezahlen via Amazon kann er sich mit seinem Amazon Konto (Amazon Emailadresse und Amazon Passwort) einloggen, im Shop wird dann ein enstprechendes Kundenkonto automatisch angelegt, falls die Emailadresse noch nicht vorhanden ist.<br/>
-      Sollte die Emailadresse bereits vorhanden sein, wird das bestehende Kundenkonto verknüpft.<br>
-      <br/>
-      Der Kunde muss im Shop keinerlei Kundendaten angeben, er wählt die gewünschte Zahlungsart und Lieferadresse in einem eigenen Checkout Prozess direkt aus seinem Amazon Adressbuch aus und genau diese Daten werden dann für die Bestellung als Rechnungs- und Lieferadresse verwendet.<br>
-      <br/>
-      Es werden keinerlei Details über die bestellten Artikel an Amazon übermittelt, hier geht es rein um die Bezahlung. Es werden keine Informationen über den Warenkorb-Inhalt an Amazon übermittelt. Lediglich der Gesamtwert des Warenkorbs wird zur Zahlungsabwicklung übermittelt.<br>
-      <br/>
-      Amazon Pay steht derzeit nur für Shopinhaber mit Firmensitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien zur Verfügung.<br>
-      <br/>
-      Das Modul kann zunächst mit einem Sandbox Account vollständig ohne echte Transaktionen getestet werden.
-      
-      <br>
-      <br>
-      Voraussetzungen:
-<ul>
+ <p>Dieses Modul ermöglicht die Zahlungsart Amazon Pay in Ihrem Zen Cart Shop.<br>
+   <br>
+   <strong>Dieses Modul setzt die Lieferung physischer Waren mit einer Versandadresse voraus. Für einen  Downloadshop digitaler Artikel ist es NICHT geeignet! Es wird deaktiviert, wenn virtuelle Artikel im Warenkorb sind.</strong><br>
+   <br/>
+   Kunden können direkt mit ihrem Amazon Account zahlen und alle dort hinterlegten Zahlungsarten zu verwenden.<br/>
+   Wählt der Kunde Bezahlen via Amazon kann er sich mit seinem Amazon Konto (Amazon Emailadresse und Amazon Passwort) einloggen, im Shop wird dann ein enstprechendes Kundenkonto automatisch angelegt, falls die Emailadresse noch nicht vorhanden ist.<br/>
+   Sollte die Emailadresse bereits vorhanden sein, wird das bestehende Kundenkonto verknüpft.<br>
+   <br/>
+   Der Kunde muss im Shop keinerlei Kundendaten angeben, er wählt die gewünschte Zahlungsart und Lieferadresse in einem eigenen Checkout Prozess direkt aus seinem Amazon Adressbuch aus und genau diese Daten werden dann für die Bestellung als Rechnungs- und Lieferadresse verwendet.<br>
+   <br/>
+   Es werden keinerlei Details über die bestellten Artikel an Amazon übermittelt, hier geht es rein um die Bezahlung. Es werden keine Informationen über den Warenkorb-Inhalt an Amazon übermittelt. Lediglich der Gesamtwert des Warenkorbs wird zur Zahlungsabwicklung übermittelt.<br>
+   <br/>
+   Amazon Pay steht derzeit nur für Shopinhaber mit Firmensitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien zur Verfügung.</p>
+ <p>   Das Modul kann zunächst mit einem Sandbox Account vollständig ohne echte Transaktionen getestet werden.
+   
+   <br>
+   <br>
+   Voraussetzungen:
+ </p>
+ <ul>
     <li>Zen Cart 1.5.5 deutsch</li>
        <li>Shop verwendet durchgehend SSL</li>
        <li>Firma des Shopinhabers hat Sitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien</li>
@@ -64,14 +66,27 @@
 (siehe beiliegendes pdf <a href="Wie-bekomme-und-nutze-ich-meine-Login-mit-AmazonClient-ID.pdf">Wie-bekomme-und-nutze-ich-meine-Login-mit-AmazonClient-ID.pdf</a>) </li>
   </ul>
 <h3>Copyright,  Lizenz, Changelog</h3>
-<p>Version 2.0.0<br/>
-2017-11-16<br/>
-webchills (<a href="https://www.webchills.at" target="_blank">www.webchills.at</a>) <br/><br/>
+<p>
 Übersetzung/Anpassung/Überarbeitung des Moduls Amazon Pay 1.0 von webiprog für die deutsche Zen Cart Version 1.5.5<br/>
 <a href="http://www.webiprog.de/loesungen/bezahlen-mit-amazon-fuer-zen-cart" target="_blank">http://www.webiprog.de/loesungen/bezahlen-mit-amazon-fuer-zen-cart</a><br/>
 Copyright Originalmodul 2014-2017:<br>
-<a href="http://www.webiprog.de" target="_blank">www.webiprog.de</a><br/><br/>
-Änderungen/Fehlerbehebungen gegenüber der Original Version 1.0:<ul><li>
+<a href="http://www.webiprog.de" target="_blank">www.webiprog.de</a>
+<p>Version 2.1.0<br>
+  2018-01-16<br>
+  webchills (<a href="https://www.webchills.at" target="_blank">www.webchills.at</a>) 
+<ul><li>Korrekte Integration der Bestätigung von AGB und Widerruf</li>
+  <li>Bugfix für Checkout Button bei versandkostenfreiem Versand</li>
+  <li>Modul bei Bestellung von virtuellen Artikeln deaktiviert<br>
+  </li>
+  <li>Nötige Änderungen bei Verwendung der Module Bestellen ohne Kundenkonto oder Datenweitergabe an Versandunternehmen hinzugefügt </li>
+  <li>Anleitung aktualisiert</li>
+</ul>
+<p>Version 2.0.0<br/>
+2017-11-16<br/>
+webchills (<a href="https://www.webchills.at" target="_blank">www.webchills.at</a>) <br/>
+  <br/>
+  Änderungen/Fehlerbehebungen gegenüber der Original Version 1.0:
+<ul><li>
 Unterstützung der in Zen Cart 1.5.5 verwendeten mehrsprachigen Ländernamen</li>
 <li>Anpassung der Dateien an die deutsche Zen Cart Version 1.5.5</li>
 <li>Kundenkommentare in der Bestellung werden übernommen</li>
@@ -81,7 +96,7 @@ Unterstützung der in Zen Cart 1.5.5 verwendeten mehrsprachigen Ländernamen</li
 <li>Konfigurationsoptionen auf deutsch hinterlegt</li>
 <li>Anleitung aktualisiert</li></ul></p>
 <p> Portions Copyright (c) 2003 osCommerce<br>
-  Portions Copyright     (c) 2003-2017 Zen Cart</p>
+  Portions Copyright     (c) 2003-2018 Zen Cart</p>
 <p>This contribution is subject to version 2.0 of the GPL license available through the world-wide-web at the following url:<br>
   <a href="http://www.zen-cart-pro.at/license/2_0.txt">http://www.zen-cart-pro.at/license/2_0.txt</a></p>
 </div>
@@ -163,10 +178,18 @@ Wenn Sie Zen Cart 1.5.5 gerade frisch installiert haben und noch   keinerlei Än
 Wenn Sie Zen Cart 1.5.5 schon länger im Einsatz haben und schon einmal   Änderungen an Dateien vorgenommen oder andere Module eingebaut haben,   dann laden Sie die Dateien keinesfalls einfach hoch. <br>
 Vergleichen Sie stattdessen alle Dateien im Ordner GEAENDERTE DATEIEN mit den   entsprechenden Dateien in Ihrem Shop und nehmen Sie die Änderungen   manuell per WinMerge oder BeyondCompare vor.<br>
 Dann spielen Sie die geänderten Dateien in der gezeigten Struktur ein.</p>
-<p>4)<br>
+<p>4) <b>OPTIONAL: Nur nötig wenn Sie das Modul Bestellen ohne Kundenkonto verwenden:</b><br/>
+  Falls Sie im Shop zusätzlich das Modul Bestellen ohne Kundenkonto (COWOA) verwenden, dann ändern Sie noch unbedingt folgende Dateien in Ihrem Shop ab:<br>
+  includes/modules/pages/account_edit/header_php.php<br>
+  includes/modules/pages/checkout_frites_login/header_php.php<br>
+  Entsprechende Beispieldateien sind im Ordner OPTIONAL/BESTELLEN OHNE KUNDENKONTO
+  <p>5) <b>OPTIONAL: Nur nötig wenn Sie das Modul Datenweitergabe an Versandunternehmen verwenden:</b><br/>
+Falls Sie im Shop zusätzlich das Modul Datenweitergabe an Versandunternhemen verwenden, dann ändern Sie noch unbedingt weitere Dateien in Ihrem Shop ab.<br>
+ Entsprechende Beispieldateien sind im Ordner OPTIONAL/DATENWEITERGABE AN VERSANDUNTERNEHMEN
+  <p>6)<br>
 In die Zen Cart Administration einloggen<br>
   <br>
-  5)<br>
+  7)<br>
   In der Zen Cart Administration unter Module &gt; Zahlungsarten das neue Modul Bezahlen mit Amazon (frites) installieren. <br>
   Unter Konfiguration weiterlesen für Hilfe zu den anzugebenden Einstellungen.</p>
 
@@ -309,7 +332,8 @@ Achten Sie auf abgelehnte Zahlungen und stellen Sie Ihre Bestellstati im Modul e
   <br>
   <br>
   Machen Sie nun unbedingt mehrere Testbestellungen im Sandbox Modus. Probieren Sie diverse Szenarien aus (Kunde ist schon im Shop eingeloggt und nimmt dann Login mit Amazon, Kunde hat mehrere Adressen in seinem Amazon Adresssbuch, usw. usw.). Nutzen Sie den Sandbox Modus um alles gefahrlos zu testen und stellen Sie das Modul erst dann auf Livemodus, wenn alles passt.
-  <br>
+ 
+  
 </p>
 </div>
 </div>
@@ -358,12 +382,7 @@ Achten Sie auf abgelehnte Zahlungen und stellen Sie Ihre Bestellstati im Modul e
 <h2>Unterstützen</h2>
 <p>Sie finden dieses Modul nützlich?</p>
 <p>Unterstützen Sie die Weiterentwicklung der deutschen Zen Cart Version.<br/>Wir freuen uns über Spenden zur Finanzierung des Servers und der vBulletin-Lizenz: </p>
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="SG3ZBJEXBM32W">
-<input type="image" src="https://www.paypalobjects.com/de_DE/AT/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="Jetzt einfach, schnell und sicher online bezahlen – mit PayPal.">
-<img alt="" border="0" src="https://www.paypalobjects.com/de_DE/i/scr/pixel.gif" width="1" height="1">
-</form>
+<p><a href="https://donorbox.org/spende-fur-die-weiterentwicklung-der-deutschen-zen-cart-version" target="_blank"><img src="https://www.zen-cart-pro.at/zencartpro-donation-white.png" alt="Spende für die Weiterentwicklung der deutschen Zen Cart Version" title="Spende für die Weiterentwicklung der deutschen Zen Cart Version"></a></p>
 
 <br/><br/>
 <p>Du bist Entwickler und willst helfen, die deutsche Zen Cart Version noch besser zu machen?<br>

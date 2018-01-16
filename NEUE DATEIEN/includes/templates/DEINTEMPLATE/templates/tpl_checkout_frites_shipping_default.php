@@ -7,10 +7,10 @@
  *
  * @package templateSystem
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_shipping_default.php 2018-01-06 14:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_shipping_default.php 2018-01-16 14:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutShipping">

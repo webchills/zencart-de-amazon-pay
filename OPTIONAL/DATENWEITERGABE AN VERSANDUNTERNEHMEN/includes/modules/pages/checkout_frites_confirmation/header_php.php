@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 2018-01-16 17:29:16Z webchills $
+ * @version $Id: header_php.php for Datenweitergabe an Versandunternehmen 2018-01-16 20:29:16Z webchills $
  */
 
 // This should be first line of the script:
@@ -17,7 +17,6 @@ include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) 
 include_once zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'].'/','checkout_confirmation.php', 'false');
 
 $frites_logged = fritesLogin();
-
 $links = fritesLinks();
 
 // Check if customer passed all checkout pages
@@ -28,6 +27,8 @@ if (empty($_SESSION['frites']['shipping_selected'])) {
 if (empty($_SESSION['frites']['payment_selected'])) {
 	zen_redirect($links['checkout_frites_payment']);
 }
+
+
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
 if ($_SESSION['cart']->count_contents() <= 0) {
@@ -77,6 +78,15 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 }
 
 unset($_SESSION['conditions']);
+
+
+
+if (!isset($_SESSION['carrier'])){
+$messageStack->add_session('checkout_payment', ERROR_CARRIER_NOT_ACCEPTED_FRITES, 'error');
+ zen_redirect($links['checkout_frites_payment']);
+}
+  
+
 
 //echo $messageStack->size('checkout_payment');
 if (!isset($order)) {

@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 2018-01-16 17:29:16Z webchills $
+ * @version $Id: header_php.php for Datenweitergabe an Versandunternehmen 2018-01-16 18:49:16Z webchills $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_PAYMENT');
@@ -27,11 +27,9 @@ if (empty($_SESSION['frites']['shipping_selected'])) {
 if ($_SESSION['cart']->count_contents() <= 0) {
     zen_redirect(zen_href_link(FILENAME_TIME_OUT));
 }
-
 if (zen_not_null($_POST['conditions'])) {
      $_SESSION['conditions'] = 'accepted';
     }
-    
 
 /*if((!isset($_GET[PURCHANSE_CONTRACT_ID_PARAM_NAME]) || !$_GET[PURCHANSE_CONTRACT_ID_PARAM_NAME])
      || (!isset($_COOKIE[PURCHANSE_CONTRACT_ID_PARAM_NAME]) || !$_COOKIE[PURCHANSE_CONTRACT_ID_PARAM_NAME])
@@ -114,6 +112,15 @@ $order_total_modules->pre_confirmation_check();
 //  $_SESSION['comments'] = '';
 $comments = $_SESSION['comments'];
 
+if (isset($_SESSION['carrier'])) {
+    $carrier = $_SESSION['carrier'];
+  }
+
+
+if (zen_not_null($_POST['carrier'])) {
+      $_SESSION['carrier'] = zen_db_prepare_input($_POST['carrier']);
+    }
+    $carrier = $_SESSION['carrier'];
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();
 

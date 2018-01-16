@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2014 Webiprog
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: frites.php 2017-11-15 20:08:16Z webchills $
+ * @version $Id: frites.php 2018-01-16 17:08:16Z webchills $
  */
 
 /**
@@ -87,11 +87,11 @@ class frites {
 		}
 
 		// disable the module if the order only contains virtual products
-		/*if ($this->enabled == true) {
-		if ($order->content_type != 'physical') {
+		if ($this->enabled == true) {
+		if ($order->content_type == 'virtual') {
 			$this->enabled = false;
 		}
-		}*/
+		}
 	}
 
 	/**

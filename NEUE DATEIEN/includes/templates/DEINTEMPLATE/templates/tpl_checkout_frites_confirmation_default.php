@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_confirmation_default.php 2018-01-07 17:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_confirmation_default.php 2018-01-08 17:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
@@ -286,13 +286,6 @@
         ?>
 
 </div>
-
-
-
-
-
-
-
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONFIRM_ORDER, BUTTON_CONFIRM_ORDER_ALT, 'name="btn_submit" id="btn_submit"') ;?></div>
 </form>
 

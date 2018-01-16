@@ -3,6 +3,8 @@ Amazon Pay - Login und Checkout mit Amazon für Zen Cart 1.5.5 deutsch
 
 Dieses Modul ermöglicht die Zahlungsart Amazon Pay in Ihrem Zen Cart Shop.
 
+Dieses Modul setzt die Lieferung physischer Waren mit einer Versandadresse voraus. Für einen Downloadshop digitaler Artikel ist es NICHT geeignet! Es wird deaktiviert, wenn virtuelle Artikel im Warenkorb sind.
+
 Kunden können direkt mit ihrem Amazon Account zahlen und alle dort hinterlegten Zahlungsarten zu verwenden.
 Wählt der Kunde Bezahlen via Amazon kann er sich mit seinem Amazon Konto (Amazon Emailadresse und Amazon Passwort) einloggen, im Shop wird dann ein enstprechendes Kundenkonto automatisch angelegt, falls die Emailadresse noch nicht vorhanden ist.
 Sollte die Emailadresse bereits vorhanden sein, wird das bestehende Kundenkonto verknüpft.
@@ -26,6 +28,17 @@ Voraussetzungen:
 * (siehe beiliegendes pdf Wie-bekomme-und-nutze-ich-meine-Login-mit-AmazonClient-ID.pdf)
 
 Copyright, Lizenz, Changelog
+
+Version 2.1.0
+2018-01-16
+webchills (www.webchills.at)
+
+* Korrekte Integration der Bestätigung von AGB und Widerruf
+* Bugfix für Checkout Button bei versandkostenfreiem Versand
+* Modul bei Bestellung von virtuellen Artikeln deaktiviert
+* Nötige Änderungen bei Verwendung der Module Bestellen ohne Kundenkonto oder Datenweitergabe an Versandunternehmen hinzugefügt
+* Anleitung aktualisiert
+
 
 Version 2.0.0
 2017-11-16
