@@ -3,10 +3,10 @@
  * shopping_cart header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php for Amazon Pay 2017-11-15 19:05:16Z webchills $
+ * @version $Id: header_php.php for Amazon Pay 2018-03-21 09:05:16Z webchills $
  */
 
 // This should be first line of the script:
@@ -17,7 +17,7 @@ $zco_notifier->notify('NOTIFY_HEADER_START_SHOPPING_CART');
 	}
 	/** END AMAZON FRITES LOGIN SSL **/
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $breadcrumb->add(NAVBAR_TITLE);
 if (isset($_GET['jscript']) && $_GET['jscript'] == 'no') {
   $messageStack->add('shopping_cart', PAYMENT_JAVASCRIPT_DISABLED, 'error');
@@ -69,9 +69,9 @@ $flagStockCheck = '';
 $products = $_SESSION['cart']->get_products();
 for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   if (($i/2) == floor($i/2)) {
-    $rowClass="rowEven";
+    $rowClass= 'rowEven';
   } else {
-    $rowClass="rowOdd";
+    $rowClass= 'rowOdd';
   }
   switch (true) {
     case (SHOW_SHOPPING_CART_DELETE == 1):
@@ -88,7 +88,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     break;
     $cur_row++;
   } // end switch
-  $attributeHiddenField = "";
+  $attributeHiddenField = '';
   $attrArray = false;
   $productsName = $products[$i]['name'];
   // Push all attributes information in an array
@@ -99,15 +99,15 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $options_order_by= ' ORDER BY popt.products_options_name';
     }
     foreach ($products[$i]['attributes'] as $option => $value) {
-      $attributes = "SELECT popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
-                     FROM " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+      $attributes = 'SELECT popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
+                     FROM ' . TABLE_PRODUCTS_OPTIONS . ' popt, ' . TABLE_PRODUCTS_OPTIONS_VALUES . ' poval, ' . TABLE_PRODUCTS_ATTRIBUTES . ' pa
                      WHERE pa.products_id = :productsID
                      AND pa.options_id = :optionsID
                      AND pa.options_id = popt.products_options_id
                      AND pa.options_values_id = :optionsValuesID
                      AND pa.options_values_id = poval.products_options_values_id
                      AND popt.language_id = :languageID
-                     AND poval.language_id = :languageID " . $options_order_by;
+                     AND poval.language_id = :languageID ' . $options_order_by;
 
       $attributes = $db->bindVars($attributes, ':productsID', $products[$i]['id'], 'integer');
       $attributes = $db->bindVars($attributes, ':optionsID', $option, 'integer');
@@ -183,4 +183,3 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_SHOPPING_CART');
-?>

@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_shipping_default.php 2018-01-16 14:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_shipping_default.php 2018-03-21 14:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutShipping">
@@ -20,9 +20,6 @@
 <h1 id="checkoutShippingHeading"><?php echo HEADING_TITLE; ?></h1>
 <?php if ($messageStack->size('checkout_shipping') > 0) echo $messageStack->output('checkout_shipping'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
-
-<?php //echo '<pre>'.__METHOD__.' ['.__LINE__.']: ';print_r($_SESSION['frites']);echo '</pre>'; ?>
-
 
 <input id="fritesOrderReferenceId" type="hidden" name="frites[OrderReferenceId]" value="<?php echo isset($_SESSION['frites']['OrderReferenceId'])?$_SESSION['frites']['OrderReferenceId']:'' ?>" />
 

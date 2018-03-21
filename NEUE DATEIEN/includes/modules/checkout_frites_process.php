@@ -2,22 +2,21 @@
 /**
  * module to process a completed Amazon checkout
  *
- * @package Amazon Pay for Zen Cart German
+ * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: checkout_frites_process.php 2017-11-15 20:35:20Z webchills $
+ * @version $Id: checkout_frites_process.php 2018-03-21 09:35:20Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEGIN');
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
-include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php');
-//include_once zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'].'/','checkout_confirmation.php', 'false');
+include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php';
 $frites_logged = fritesLogin();
 $links = fritesLinks();
 
@@ -52,13 +51,13 @@ if ($_SESSION['payment_attempt'] > 3) {
 if (!isset($credit_covers)) $credit_covers = FALSE;
 
 // load selected payment module
-require(DIR_WS_CLASSES . 'payment.php');
+require DIR_WS_CLASSES . 'payment.php';
 $payment_modules = new payment($_SESSION['payment']);
 // load the selected shipping module
-require(DIR_WS_CLASSES . 'shipping.php');
+require DIR_WS_CLASSES . 'shipping.php';
 $shipping_modules = new shipping($_SESSION['shipping']);
 
-require(DIR_WS_CLASSES . 'order.php');
+require DIR_WS_CLASSES . 'order.php';
 $order = new order;
 
 // prevent 0-entry orders from being generated/spoofed
@@ -66,17 +65,10 @@ if (sizeof($order->products) < 1) {
   zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
 }
 
-require(DIR_WS_CLASSES . 'order_total.php');
+require DIR_WS_CLASSES . 'order_total.php';
 $order_total_modules = new order_total;
 
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PRE_CONFIRMATION_CHECK');
-/*if (strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
-  $order_totals = $order_total_modules->pre_confirmation_check();
-}
-if ($credit_covers === TRUE)
-{
-	$order->info['payment_method'] = $order->info['payment_module_code'] = '';
-}*/
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PROCESS');
 $order_totals = $order_total_modules->process();
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_TOTALS_PROCESS');

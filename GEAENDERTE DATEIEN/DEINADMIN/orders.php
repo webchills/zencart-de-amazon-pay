@@ -1,34 +1,34 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: orders.php for Amazon Pay 2017-11-15 19:13:51Z webchills $
+ * @version $Id: orders.php for Amazon Pay 2018-03-21 19:13:51Z webchills $
  */
 
-  require('includes/application_top.php');
+  require 'includes/application_top.php';
   /*** AMAZON FRITES AJAX BEGIN ***/
-	include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php');
+	include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php';
 	fritesAjax();
 	/*** AMAZON FRITES AJAX END ***/
   // unset variable which is sometimes tainted by bad plugins like magneticOne tools
   if (isset($module)) unset($module);
 
-  require(DIR_WS_CLASSES . 'currencies.php');
+  require DIR_WS_CLASSES . 'currencies.php';
   $currencies = new currencies();
 
   if (isset($_GET['oID'])) $_GET['oID'] = (int)$_GET['oID'];
   if (isset($_GET['download_reset_on'])) $_GET['download_reset_on'] = (int)$_GET['download_reset_on'];
   if (isset($_GET['download_reset_off'])) $_GET['download_reset_off'] = (int)$_GET['download_reset_off'];
 
-  include(DIR_WS_CLASSES . 'order.php');
+  include DIR_WS_CLASSES . 'order.php';
 
   // prepare order-status pulldown list
   $orders_statuses = array();
   $orders_status_array = array();
-  $orders_status = $db->Execute("select orders_status_id, orders_status_name
-                                 from " . TABLE_ORDERS_STATUS . "
+  $orders_status = $db->Execute('select orders_status_id, orders_status_name
+                                 from ' . TABLE_ORDERS_STATUS . "
                                  where language_id = '" . (int)$_SESSION['languages_id'] . "' order by orders_status_id");
   while (!$orders_status->EOF) {
     $orders_statuses[] = array('id' => $orders_status->fields['orders_status_id'],
@@ -49,7 +49,7 @@
     $oID = zen_db_prepare_input(trim($_GET['oID']));
   }
   if ($oID) {
-    $orders = $db->Execute("select orders_id from " . TABLE_ORDERS . "
+    $orders = $db->Execute('select orders_id from ' . TABLE_ORDERS . "
                             where orders_id = '" . (int)$oID . "'");
     $order_exists = true;
     if ($orders->RecordCount() <= 0) {
@@ -65,17 +65,17 @@
       // reset single download to on
         if ($_GET['download_reset_on'] > 0) {
           // adjust download_maxdays based on current date
-          $check_status = $db->Execute("select customers_name, customers_email_address, orders_status,
-                                      date_purchased from " . TABLE_ORDERS . "
+          $check_status = $db->Execute('select customers_name, customers_email_address, orders_status,
+                                      date_purchased from ' . TABLE_ORDERS . "
                                       where orders_id = '" . $_GET['oID'] . "'");
-          $customer_gender = $db->Execute("select customers_gender from " . TABLE_CUSTOMERS . "
+          $customer_gender = $db->Execute('select customers_gender from ' . TABLE_CUSTOMERS . "
                                       where customers_id = '" . $check_status->fields['customers_id'] . "'");
           // check for existing product attribute download days and max
-          $chk_products_download_query = "SELECT orders_products_id, orders_products_filename, products_prid from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " WHERE orders_products_download_id='" . $_GET['download_reset_on'] . "'";
+          $chk_products_download_query = 'SELECT orders_products_id, orders_products_filename, products_prid from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " WHERE orders_products_download_id='" . $_GET['download_reset_on'] . "'";
           $chk_products_download = $db->Execute($chk_products_download_query);
 
-          $chk_products_download_time_query = "SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
-          from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+          $chk_products_download_time_query = 'SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
+          from ' . TABLE_PRODUCTS_ATTRIBUTES . ' pa, ' . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
           WHERE pa.products_attributes_id = pad.products_attributes_id
           and pad.products_attributes_filename = '" . $db->prepare_input($chk_products_download->fields['orders_products_filename']) . "'
           and pa.products_id = '" . (int)$chk_products_download->fields['products_prid'] . "'";
@@ -84,10 +84,10 @@
 
           if ($chk_products_download_time->EOF) {
             $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + DOWNLOAD_MAX_DAYS);
-            $update_downloads_query = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='" . $zc_max_days . "', download_count='" . DOWNLOAD_MAX_COUNT . "' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_on'] . "'";
+            $update_downloads_query = 'update ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='" . $zc_max_days . "', download_count='" . DOWNLOAD_MAX_COUNT . "' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_on'] . "'";
           } else {
             $zc_max_days = ($chk_products_download_time->fields['products_attributes_maxdays'] == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + $chk_products_download_time->fields['products_attributes_maxdays']);
-            $update_downloads_query = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='" . $zc_max_days . "', download_count='" . $chk_products_download_time->fields['products_attributes_maxcount'] . "' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_on'] . "'";
+            $update_downloads_query = 'update ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='" . $zc_max_days . "', download_count='" . $chk_products_download_time->fields['products_attributes_maxcount'] . "' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_on'] . "'";
           }
 
           $db->Execute($update_downloads_query);
@@ -101,7 +101,7 @@
           // adjust download_maxdays based on current date
           // *** fix: adjust count not maxdays to cancel download
 //          $update_downloads_query = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='0', download_count='0' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_off'] . "'";
-          $update_downloads_query = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_count='0' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_off'] . "'";
+          $update_downloads_query = 'update ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_count='0' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_off'] . "'";
           $db->Execute($update_downloads_query);
           unset($_GET['download_reset_off']);
 
@@ -122,10 +122,10 @@
         if ($status < 1) break;
 
         $order_updated = false;
-        $check_status = $db->Execute("select customers_id, customers_name, customers_email_address, orders_status,
-                                      date_purchased from " . TABLE_ORDERS . "
+        $check_status = $db->Execute('select customers_id, customers_name, customers_email_address, orders_status,
+                                      date_purchased from ' . TABLE_ORDERS . "
                                       where orders_id = '" . (int)$oID . "'");
-        $customer_gender = $db->Execute("select customers_gender from " . TABLE_CUSTOMERS . "
+        $customer_gender = $db->Execute('select customers_gender from ' . TABLE_CUSTOMERS . "
                                       where customers_id = '" . $check_status->fields['customers_id'] . "'");
       
         // BOF pdf Rechnung  
@@ -133,8 +133,8 @@
         $rlStat = explode('|', RL_INVOICE3_SEND_ORDERSTATUS_CHANGE);
         $rl_invoice3_send = in_array($status, $rlStat);
         if ( ($check_status->fields['orders_status'] != $status  && $status==RL_INVOICE3_ORDERSTATUS)  || ($rl_invoice3_send == true)){
-            require_once (DIR_FS_CATALOG . DIR_WS_INCLUDES . 'classes/class.rl_invoice3.php');     
-            require_once ('../' . DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/rl_invoice3.php');
+            require_once DIR_FS_CATALOG . DIR_WS_INCLUDES . 'classes/class.rl_invoice3.php';
+            require_once '../' . DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/rl_invoice3.php';
             $paper = rl_invoice3::getDefault(RL_INVOICE3_PAPER, array('format' => 'A4', 'unit' => 'mm', 'orientation' => 'P'));
             $pdfT = new rl_invoice3($oID, $paper['orientation'], $paper['unit'], $paper['format']);
             $pdfT->createPdfFile(true);
@@ -145,7 +145,7 @@
       }
         // EOF pdf Rechnung
         if ( ($check_status->fields['orders_status'] != $status) || zen_not_null($comments)) {
-          $db->Execute("update " . TABLE_ORDERS . "
+          $db->Execute('update ' . TABLE_ORDERS . "
                         set orders_status = '" . zen_db_input($status) . "', last_modified = now()
                         where orders_id = '" . (int)$oID . "'");
 
@@ -201,7 +201,7 @@
             $customer_notified = '1';
 
             // PayPal Trans ID, if any
-            $sql = "select txn_id, parent_txn_id from " . TABLE_PAYPAL . " where order_id = :orderID order by last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC ";
+            $sql = 'select txn_id, parent_txn_id from ' . TABLE_PAYPAL . ' where order_id = :orderID order by last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC ';
             $sql = $db->bindVars($sql, ':orderID', $oID, 'integer');
             $result = $db->Execute($sql);
             if ($result->RecordCount() > 0) {
@@ -224,7 +224,7 @@
             $customer_notified = '-1';
           }
 
-          $db->Execute("insert into " . TABLE_ORDERS_STATUS_HISTORY . "
+          $db->Execute('insert into ' . TABLE_ORDERS_STATUS_HISTORY . "
                       (orders_id, orders_status_id, date_added, customer_notified, comments)
                       values ('" . (int)$oID . "',
                       '" . zen_db_input($status) . "',
@@ -236,14 +236,12 @@
 
         // trigger any appropriate updates which should be sent back to the payment gateway:
         $order = new order((int)$oID);
-        if ($order->info['payment_module_code']) {
-          if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-            require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-            require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
-            $module = new $order->info['payment_module_code'];
-            if (method_exists($module, '_doStatusUpdate')) {
-              $response = $module->_doStatusUpdate($oID, $status, $comments, $customer_notified, $check_status->fields['orders_status']);
-            }
+        if ($order->info['payment_module_code'] && file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
+          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
+          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          $module = new $order->info['payment_module_code'];
+          if (method_exists($module, '_doStatusUpdate')) {
+            $response = $module->_doStatusUpdate($oID, $status, $comments, $customer_notified, $check_status->fields['orders_status']);
           }
         }
 
@@ -251,14 +249,14 @@
           if ($status == DOWNLOADS_ORDERS_STATUS_UPDATED_VALUE) {
 
             // adjust download_maxdays based on current date
-            $chk_downloads_query = "SELECT opd.*, op.products_id from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd, " . TABLE_ORDERS_PRODUCTS . " op
+            $chk_downloads_query = 'SELECT opd.*, op.products_id from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' opd, ' . TABLE_ORDERS_PRODUCTS . " op
                                     WHERE op.orders_id='" . (int)$oID . "'
                                     and opd.orders_products_id = op.orders_products_id";
             $chk_downloads = $db->Execute($chk_downloads_query);
 
             while (!$chk_downloads->EOF) {
-              $chk_products_download_time_query = "SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
-                                                    from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+              $chk_products_download_time_query = 'SELECT pa.products_attributes_id, pa.products_id, pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount
+                                                    from ' . TABLE_PRODUCTS_ATTRIBUTES . ' pa, ' . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                                                     WHERE pa.products_attributes_id = pad.products_attributes_id
                                                     and pad.products_attributes_filename = '" . $db->prepare_input($chk_downloads->fields['orders_products_filename']) . "'
                                                     and pa.products_id = '" . $chk_downloads->fields['products_id'] . "'";
@@ -267,10 +265,10 @@
 
               if ($chk_products_download_time->EOF) {
                 $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + DOWNLOAD_MAX_DAYS);
-                $update_downloads_query = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='" . $zc_max_days . "', download_count='" . DOWNLOAD_MAX_COUNT . "' where orders_id='" . (int)$oID . "' and orders_products_download_id='" . $_GET['download_reset_on'] . "'";
+                $update_downloads_query = 'update ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='" . $zc_max_days . "', download_count='" . DOWNLOAD_MAX_COUNT . "' where orders_id='" . (int)$oID . "' and orders_products_download_id='" . $_GET['download_reset_on'] . "'";
               } else {
                 $zc_max_days = ($chk_products_download_time->fields['products_attributes_maxdays'] == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + $chk_products_download_time->fields['products_attributes_maxdays']);
-                $update_downloads_query = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='" . $zc_max_days . "', download_count='" . $chk_products_download_time->fields['products_attributes_maxcount'] . "' where orders_id='" . (int)$oID . "' and orders_products_download_id='" . $chk_downloads->fields['orders_products_download_id'] . "'";
+                $update_downloads_query = 'update ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='" . $zc_max_days . "', download_count='" . $chk_products_download_time->fields['products_attributes_maxcount'] . "' where orders_id='" . (int)$oID . "' and orders_products_download_id='" . $chk_downloads->fields['orders_products_download_id'] . "'";
               }
 
               $db->Execute($update_downloads_query);
@@ -299,27 +297,25 @@
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')), 'NONSSL'));
         break;
       case 'delete_cvv':
-        $delete_cvv = $db->Execute("update " . TABLE_ORDERS . " set cc_cvv = '" . TEXT_DELETE_CVV_REPLACEMENT . "' where orders_id = '" . (int)$_GET['oID'] . "'");
+        $delete_cvv = $db->Execute('update ' . TABLE_ORDERS . " set cc_cvv = '" . TEXT_DELETE_CVV_REPLACEMENT . "' where orders_id = '" . (int)$_GET['oID'] . "'");
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
       case 'mask_cc':
-        $result  = $db->Execute("select cc_number from " . TABLE_ORDERS . " where orders_id = '" . (int)$_GET['oID'] . "'");
+        $result  = $db->Execute('select cc_number from ' . TABLE_ORDERS . " where orders_id = '" . (int)$_GET['oID'] . "'");
         $old_num = $result->fields['cc_number'];
-        $new_num = substr($old_num, 0, 4) . str_repeat('*', (strlen($old_num) - 8)) . substr($old_num, -4);
-        $mask_cc = $db->Execute("update " . TABLE_ORDERS . " set cc_number = '" . $new_num . "' where orders_id = '" . (int)$_GET['oID'] . "'");
+        $new_num = substr($old_num, 0, 4) . str_repeat('*', strlen($old_num) - 8) . substr($old_num, -4);
+        $mask_cc = $db->Execute('update ' . TABLE_ORDERS . " set cc_number = '" . $new_num . "' where orders_id = '" . (int)$_GET['oID'] . "'");
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
 
       case 'doRefund':
         $order = new order($oID);
-        if ($order->info['payment_module_code']) {
-          if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-            require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-            require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
-            $module = new $order->info['payment_module_code'];
-            if (method_exists($module, '_doRefund')) {
-              $module->_doRefund($oID);
-            }
+        if ($order->info['payment_module_code'] && file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
+          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
+          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          $module = new $order->info['payment_module_code'];
+          if (method_exists($module, '_doRefund')) {
+            $module->_doRefund($oID);
           }
         }
         zen_record_admin_activity('Order ' . $oID . ' refund processed. See order comments for details.', 'info');
@@ -327,42 +323,36 @@
         break;
       case 'doAuth':
         $order = new order($oID);
-        if ($order->info['payment_module_code']) {
-          if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-            require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-            require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
-            $module = new $order->info['payment_module_code'];
-            if (method_exists($module, '_doAuth')) {
-              $module->_doAuth($oID, $order->info['total'], $order->info['currency']);
-            }
+        if ($order->info['payment_module_code'] && file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
+          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
+          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          $module = new $order->info['payment_module_code'];
+          if (method_exists($module, '_doAuth')) {
+            $module->_doAuth($oID, $order->info['total'], $order->info['currency']);
           }
         }
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
       case 'doCapture':
         $order = new order($oID);
-        if ($order->info['payment_module_code']) {
-          if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-            require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-            require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
-            $module = new $order->info['payment_module_code'];
-            if (method_exists($module, '_doCapt')) {
-              $module->_doCapt($oID, 'Complete', $order->info['total'], $order->info['currency']);
-            }
+        if ($order->info['payment_module_code'] && file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
+          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
+          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          $module = new $order->info['payment_module_code'];
+          if (method_exists($module, '_doCapt')) {
+            $module->_doCapt($oID, 'Complete', $order->info['total'], $order->info['currency']);
           }
         }
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
         break;
       case 'doVoid':
         $order = new order($oID);
-        if ($order->info['payment_module_code']) {
-          if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-            require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-            require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
-            $module = new $order->info['payment_module_code'];
-            if (method_exists($module, '_doVoid')) {
-              $module->_doVoid($oID);
-            }
+        if ($order->info['payment_module_code'] && file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
+          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
+          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          $module = new $order->info['payment_module_code'];
+          if (method_exists($module, '_doVoid')) {
+            $module->_doVoid($oID);
           }
         }
         zen_record_admin_activity('Order ' . $oID . ' void processed. See order comments for details.', 'info');
@@ -382,7 +372,7 @@
 <script type="text/javascript" src="includes/menu.js"></script>
 <script type="text/javascript" src="includes/general.js"></script>
 <?php // ** BEGIN AMAZON FRITES ADMIN ** ?>
-	<?php include(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_admin_orders.php'); ?>
+	<?php include DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_admin_orders.php'; ?>
 	<?php // ** END AMAZON FRITES ADMIN ** ?>
 <script type="text/javascript">
   <!--
@@ -406,7 +396,7 @@ function couponpopupWindow(url) {
 <body onLoad="init()">
 <!-- header //-->
 <?php
-  require(DIR_WS_INCLUDES . 'header.php');
+  require DIR_WS_INCLUDES . 'header.php';
 ?>
 <!-- header_eof //-->
 
@@ -486,24 +476,22 @@ function couponpopupWindow(url) {
   if ($action == 'edit'&& $order_exists) {
     $order = new order($oID);
     $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EDIT_BEGIN', $oID, $order);
-    if ($order->info['payment_module_code']) {
-      if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-        require(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-        require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
-        $module = new $order->info['payment_module_code'];
+    if ($order->info['payment_module_code'] && file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
+      require(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
+      require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+      $module = new $order->info['payment_module_code'];
 //        echo $module->admin_notification($oID);
-      }
     }
 
 
     $prev_button = '';
-    $result = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " WHERE orders_id < '" . $oID . "' ORDER BY orders_id DESC LIMIT 1");
+    $result = $db->Execute('SELECT orders_id FROM ' . TABLE_ORDERS . " WHERE orders_id < '" . $oID . "' ORDER BY orders_id DESC LIMIT 1");
     if ($result->RecordCount()) {
       $prev_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '\'">&laquo; ' . $result->fields['orders_id'] . '</button>';
     }
 
     $next_button = '';
-    $result = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " WHERE orders_id > '" . $oID . "' ORDER BY orders_id ASC LIMIT 1");
+    $result = $db->Execute('SELECT orders_id FROM ' . TABLE_ORDERS . " WHERE orders_id > '" . $oID . "' ORDER BY orders_id ASC LIMIT 1");
     if ($result->RecordCount()) {
       $next_button = '<button type="button" class="btn btn-default" onclick="window.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '\'">' . $result->fields['orders_id'] . ' &raquo;</button>';
     }
@@ -728,7 +716,7 @@ function couponpopupWindow(url) {
 
 <?php
   // show downloads
-  require(DIR_WS_MODULES . 'orders_download.php');
+  require DIR_WS_MODULES . 'orders_download.php';
 ?>
 
       <tr>
@@ -743,8 +731,8 @@ function couponpopupWindow(url) {
             <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_COMMENTS; ?></strong></td>
           </tr>
 <?php
-    $orders_history = $db->Execute("select orders_status_id, date_added, customer_notified, comments
-                                    from " . TABLE_ORDERS_STATUS_HISTORY . "
+    $orders_history = $db->Execute('select orders_status_id, date_added, customer_notified, comments
+                                    from ' . TABLE_ORDERS_STATUS_HISTORY . "
                                     where orders_id = '" . zen_db_input($oID) . "'
                                     order by date_added");
 
@@ -807,8 +795,8 @@ function couponpopupWindow(url) {
       </tr>
 <?php
 // check if order has open gv
-        $gv_check = $db->Execute("select order_id, unique_id
-                                  from " . TABLE_COUPON_GV_QUEUE ."
+        $gv_check = $db->Execute('select order_id, unique_id
+                                  from ' . TABLE_COUPON_GV_QUEUE ."
                                   where order_id = '" . $_GET['oID'] . "' and release_flag='N' limit 1");
         if ($gv_check->RecordCount() > 0) {
           $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'order=' . $_GET['oID']) . '">' . zen_image_button('button_gift_queue.gif',IMAGE_GIFT_QUEUE) . '</a>';
@@ -833,29 +821,29 @@ function couponpopupWindow(url) {
 <?php
 // Sort Listing
           switch ($_GET['list_order']) {
-              case "id-asc":
-              $disp_order = "c.customers_id";
+              case 'id-asc':
+              $disp_order = 'c.customers_id';
               break;
-              case "firstname":
-              $disp_order = "c.customers_firstname";
+              case 'firstname':
+              $disp_order = 'c.customers_firstname';
               break;
-              case "firstname-desc":
-              $disp_order = "c.customers_firstname DESC";
+              case 'firstname-desc':
+              $disp_order = 'c.customers_firstname DESC';
               break;
-              case "lastname":
-              $disp_order = "c.customers_lastname, c.customers_firstname";
+              case 'lastname':
+              $disp_order = 'c.customers_lastname, c.customers_firstname';
               break;
-              case "lastname-desc":
-              $disp_order = "c.customers_lastname DESC, c.customers_firstname";
+              case 'lastname-desc':
+              $disp_order = 'c.customers_lastname DESC, c.customers_firstname';
               break;
-              case "company":
-              $disp_order = "a.entry_company";
+              case 'company':
+              $disp_order = 'a.entry_company';
               break;
-              case "company-desc":
-              $disp_order = "a.entry_company DESC";
+              case 'company-desc':
+              $disp_order = 'a.entry_company DESC';
               break;
               default:
-              $disp_order = "c.customers_id DESC";
+              $disp_order = 'c.customers_id DESC';
           }
 ?>
                 <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_ORDERS_ID; ?></td>
@@ -878,11 +866,11 @@ function couponpopupWindow(url) {
   if (isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) {
     $new_fields = '';
     $search_distinct = ' distinct ';
-    $new_table = " left join " . TABLE_ORDERS_PRODUCTS . " op on (op.orders_id = o.orders_id) ";
+    $new_table = ' left join ' . TABLE_ORDERS_PRODUCTS . ' op on (op.orders_id = o.orders_id) ';
     $keywords = zen_db_input(zen_db_prepare_input($_GET['search_orders_products']));
     $search = " and (op.products_model like '%" . $keywords . "%' or op.products_name like '" . $keywords . "%')";
     if (substr(strtoupper($_GET['search_orders_products']), 0, 3) == 'ID:') {
-      $keywords = TRIM(substr($_GET['search_orders_products'], 3));
+      $keywords = trim(substr($_GET['search_orders_products'], 3));
       $search = " and op.products_id ='" . (int)$keywords . "'";
     }
   } else {
@@ -898,26 +886,26 @@ function couponpopupWindow(url) {
 //    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
   }
 } // eof: search orders or orders_products
-    $new_fields = ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
+    $new_fields = ', o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ';
 ?>
 <?php
 
-    $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, o.order_device, s.orders_status_name, ot.text as order_total" .
-$new_fields . "
-                          from (" . TABLE_ORDERS . " o " .
-                          $new_table . ")
-                          left join " . TABLE_ORDERS_STATUS . " s on (o.orders_status = s.orders_status_id and s.language_id = " . (int)$_SESSION['languages_id'] . ")
-                          left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') ";
+    $orders_query_raw = 'select ' . $search_distinct . ' o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, o.order_device, s.orders_status_name, ot.text as order_total' .
+$new_fields . '
+                          from (' . TABLE_ORDERS . ' o ' .
+                          $new_table . ')
+                          left join ' . TABLE_ORDERS_STATUS . ' s on (o.orders_status = s.orders_status_id and s.language_id = ' . (int)$_SESSION['languages_id'] . ')
+                          left join ' . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') ";
 
 
     if (isset($_GET['cID'])) {
       $cID = (int)zen_db_prepare_input($_GET['cID']);
-      $orders_query_raw .= " WHERE o.customers_id = " . (int)$cID;
+      $orders_query_raw .= ' WHERE o.customers_id = ' . (int)$cID;
 //echo '<BR><BR>I SEE A: ' . $orders_query_raw . '<BR><BR>';
 
     } elseif ($_GET['status'] != '') {
       $status = (int)zen_db_prepare_input($_GET['status']);
-      $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status . $search;
+      $orders_query_raw .= ' WHERE s.orders_status_id = ' . (int)$status . $search;
 //echo '<BR><BR>I SEE B: ' . $orders_query_raw . '<BR><BR>';
 
     } else {
@@ -925,7 +913,7 @@ $new_fields . "
 //echo '<BR><BR>I SEE C: ' . $orders_query_raw . '<BR><BR>';
     }
 
-    $orders_query_raw .= " order by o.orders_id DESC";
+    $orders_query_raw .= ' order by o.orders_id DESC';
 
 // Split Page
 // reset page when page is unknown
@@ -940,7 +928,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
       $check_count++;
       $check_page->MoveNext();
     }
-    $_GET['page'] = round((($check_count/MAX_DISPLAY_SEARCH_RESULTS_ORDERS)+(fmod_round($check_count,MAX_DISPLAY_SEARCH_RESULTS_ORDERS) !=0 ? .5 : 0)),0);
+    $_GET['page'] = round(($check_count/MAX_DISPLAY_SEARCH_RESULTS_ORDERS)+(fmod_round($check_count,MAX_DISPLAY_SEARCH_RESULTS_ORDERS) !=0 ? .5 : 0),0);
   } else {
     $_GET['page'] = 1;
   }
@@ -961,10 +949,10 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
       }
 
       $show_difference = '';
-      if ((strtoupper($orders->fields['delivery_name']) != strtoupper($orders->fields['billing_name']) and trim($orders->fields['delivery_name']) != '')) {
+      if (strtoupper($orders->fields['delivery_name']) != strtoupper($orders->fields['billing_name']) and trim($orders->fields['delivery_name']) != '') {
         $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
       }
-      if ((strtoupper($orders->fields['delivery_street_address']) != strtoupper($orders->fields['billing_street_address']) and trim($orders->fields['delivery_street_address']) != '')) {
+      if (strtoupper($orders->fields['delivery_street_address']) != strtoupper($orders->fields['billing_street_address']) and trim($orders->fields['delivery_street_address']) != '') {
         $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
       }
       $show_payment_type = $orders->fields['payment_module_code'] . '<br />' . $orders->fields['shipping_module_code'];
@@ -1052,8 +1040,8 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
         $contents[] = array('text' => 'Device: ' . $oInfo->order_device);
 
 // check if order has open gv
-        $gv_check = $db->Execute("select order_id, unique_id
-                                  from " . TABLE_COUPON_GV_QUEUE ."
+        $gv_check = $db->Execute('select order_id, unique_id
+                                  from ' . TABLE_COUPON_GV_QUEUE ."
                                   where order_id = '" . $oInfo->orders_id . "' and release_flag='N' limit 1");
         if ($gv_check->RecordCount() > 0) {
           $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'order=' . $oInfo->orders_id) . '">' . zen_image_button('button_gift_queue.gif',IMAGE_GIFT_QUEUE) . '</a>';
@@ -1062,7 +1050,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
         }
 
         // indicate if comments exist
-        $orders_history_query = $db->Execute("select orders_status_id, date_added, customer_notified, comments from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . $oInfo->orders_id . "' and comments !='" . "'" );
+        $orders_history_query = $db->Execute('select orders_status_id, date_added, customer_notified, comments from ' . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . $oInfo->orders_id . "' and comments !='" . "'" );
 
         if ($orders_history_query->RecordCount() > 0) {
           $contents[] = array('align' => 'left', 'text' => '<br />' . TABLE_HEADING_COMMENTS);
@@ -1093,7 +1081,7 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
   }
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS_END', (isset($oInfo) ? $oInfo : array()), $contents);
 
-  if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
+  if ( zen_not_null($heading) && zen_not_null($contents)) {
     echo '            <td class="noprint" width="25%" valign="top">' . "\n";
 
     $box = new box;
@@ -1116,10 +1104,10 @@ if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
 
 <!-- footer //-->
 <div class="footer-area">
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+<?php require DIR_WS_INCLUDES . 'footer.php'; ?>
 </div>
 <!-- footer_eof //-->
 <br />
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>

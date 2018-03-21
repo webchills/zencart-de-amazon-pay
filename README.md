@@ -13,21 +13,34 @@ Der Kunde muss im Shop keinerlei Kundendaten angeben, er wählt die gewünschte 
 
 Es werden keinerlei Details über die bestellten Artikel an Amazon übermittelt, hier geht es rein um die Bezahlung. Es werden keine Informationen über den Warenkorb-Inhalt an Amazon übermittelt. Lediglich der Gesamtwert des Warenkorbs wird zur Zahlungsabwicklung übermittelt.
 
-Amazon Pay steht derzeit nur für Shopinhaber mit Firmensitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien zur Verfügung.
+Amazon Pay steht derzeit (Stand März 2018) nur für Shopinhaber mit Firmensitz in Deutschland, Österreich, Belgien, Dänemark, Frankreich, Großbritannien, Italien, Irland, Luxemburg, Niederlande, Portugal, Schweden, Spanien, Ungarn oder Zypern zur Verfügung.
 
-Das Modul kann zunächst mit einem Sandbox Account vollständig ohne echte Transaktionen getestet werden.
+Das Modul kann zunächst mit einem Sandbox Account vollständig ohne echte Transaktionen getestet werden. 
 
 Voraussetzungen:
 
 * Zen Cart 1.5.5 deutsch
 * Shop verwendet durchgehend SSL
-* Firma des Shopinhabers hat Sitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien
+* Bundesland ist im Shop NICHT aktiv (Konfiguration > Kundendetails)
+* Firma des Shopinhabers hat Sitz in Deutschland, Österreich, Belgien, Dänemark, Frankreich, Großbritannien, Italien, Irland, Luxemburg, Niederlande, Portugal, Schweden, Spanien, Ungarn oder Zypern (Stand März 2018)
 * Amazon Seller Account
 * Amazon Payments Konto
 * Login mit Amazon ID und andere Kennungen erstellt
 * (siehe beiliegendes pdf Wie-bekomme-und-nutze-ich-meine-Login-mit-AmazonClient-ID.pdf)
 
 Copyright, Lizenz, Changelog
+
+Version 2.2.0
+2018-03-21
+webchills (www.webchills.at) 
+
+* Korrekte Übernahme von Firmennamen in Lieferadressen
+* Einschränkungsmöglichkeit auf Zonen entfernt
+* Unnötige Funktionen entfernt
+* Anpassungen für PHP 7.1
+* Unterstützte Shop Länder erweitert (Stand Ende März 2018)
+* Anleitung aktualisiert
+
 
 Version 2.1.0
 2018-01-16

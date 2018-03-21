@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Amazon Pay for Zen Cart German
+ * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 2018-01-08 18:29:16Z webchills $
+ * @version $Id: header_php.php 2018-03-21 09:29:16Z webchills $
  */
 // This should be first line of the script:
   
@@ -14,7 +14,7 @@
   include_once zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'].'/','checkout_process.php', 'false');
 
 
-  require(DIR_WS_MODULES . zen_get_module_directory('checkout_frites_process.php'));
+  require DIR_WS_MODULES . zen_get_module_directory('checkout_frites_process.php');
 
 // load the after_process function from the payment modules
   $payment_modules->after_process();
@@ -34,4 +34,4 @@
 
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SUCCESS, (isset($_GET['action']) && $_GET['action'] == 'confirm' ? 'action=confirm' : ''), 'SSL'));
 
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require DIR_WS_INCLUDES . 'application_bottom.php';

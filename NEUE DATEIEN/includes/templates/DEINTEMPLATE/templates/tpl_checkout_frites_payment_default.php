@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_payment_default.php 2018-01-16 17:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_payment_default.php 2018-03-21 09:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutPayment">
@@ -23,7 +23,7 @@
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 <?php if ($messageStack->size('checkout_payment') > 0) echo $messageStack->output('checkout_payment'); ?>
 
-<?php //echo '<pre>'.__METHOD__.' ['.__LINE__.']: ';print_r($_SESSION['frites']);echo '</pre>'; ?>
+
 <?php
   if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 ?>
@@ -210,7 +210,7 @@
 <legend><?php echo $selection[$i]['module']; ?></legend>
 <?php echo $selection[$i]['redeem_instructions']; ?>
 <div class="gvBal larger"><?php echo $selection[$i]['checkbox']; ?></div>
-<label class="inputLabel"<?php echo ($selection[$i]['fields'][$j]['tag']) ? ' for="'.$selection[$i]['fields'][$j]['tag'].'"': ''; ?>><?php echo $selection[$i]['fields'][$j]['title']; ?></label>
+<label class="inputLabel"<?php echo $selection[$i]['fields'][$j]['tag'] ? ' for="'.$selection[$i]['fields'][$j]['tag'].'"': ''; ?>><?php echo $selection[$i]['fields'][$j]['title']; ?></label>
 <?php echo $selection[$i]['fields'][$j]['field']; ?>
 </fieldset>
 <?php

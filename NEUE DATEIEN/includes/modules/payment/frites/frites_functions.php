@@ -1,18 +1,14 @@
 <?php
-
 /**
- * Amazon Pay Payment Module for Zen Cart German
- *
- * @package paymentMethod
+ * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @Author: Webiprog  Mon Mar 21 18:36:04 2016 +0200 $
+ * @version $Id: frites_functions.php 2018-03-21 17:29:16Z webchills $
  */
 
-//error_reporting(E_ALL);
-//error_reporting(E_ALL & ~E_NOTICE);
-//ini_set('display_errors', '1');
+
 
 include_once zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/','frites.php', 'false');
 
@@ -21,12 +17,12 @@ class frites_functions {
 	}
 
 	public static function get_allowed_countries() {
-		return array('GB', 'DE', 'FR', 'IT', 'ES');
+		return array('GB', 'AT', 'DE', 'FR', 'IT', 'ES', 'BE', 'DK', 'IE', 'LU', 'NL', 'PT', 'SE', 'HU', 'CY');
 	}
 	
 	// allowed country ids from table countries_name
 	public static function get_allowed_countries_names() {
-		return array('256', '81', '248', '254', '247');
+		return array('222', '14', '81', '73', '105', '195', '21', '57', '103', '124', '150', '171', '203', '97', '55');
 	}
 
 	public static function get_allowed_languages() {
@@ -64,19 +60,11 @@ class frites_functions {
 			}
 		}
 
-		/*if ($result && !(int)MODULE_PAYMENT_FRITES_ZONE) {
-			$result = true;
-		}
-
-		if (!$result) {
-			echo '<pre>'.__METHOD__.' ['.__LINE__.']: '; print_r($sql); echo '</pre>';
-		}*/
+		
 
 		return $result;
 	}
 }
-
-	//include_once DIR_WS_CLASSES . 'currencies.php';
 
 	if (!defined('MODULE_PAYMENT_FRITES_POPUP')) define('MODULE_PAYMENT_FRITES_POPUP', 'True');
 	if (!defined('MODULE_PAYMENT_FRITES_MWSAUTH_TOKEN')) define('MODULE_PAYMENT_FRITES_MWSAUTH_TOKEN', '');
@@ -94,15 +82,14 @@ class frites_functions {
 			'AmazonOrderReferenceId' => $OrderReferenceId,
 			'OrderReferenceAttributes.OrderTotal.Amount' => $OrderTotalAmount,
 			'OrderReferenceAttributes.OrderTotal.CurrencyCode' => $OrderTotalCurrency,
-			'OrderReferenceAttributes.PlatformId' => ($currency == 'GBP' ? 'AEPG5JMFPEHAQ' : 'A2LWF43CHSUL0P'), // Webiprog SellerId/MerchantId
+			
 			'OrderReferenceAttributes.SellerNote' => $SellerNote,
 			'OrderReferenceAttributes.SellerOrderAttributes.SellerOrderId' => $SellerOrderId,
 			'OrderReferenceAttributes.SellerOrderAttributes.StoreName' => HTTP_SERVER,
 			'MWSAuthToken' => defined('MODULE_PAYMENT_FRITES_MWSAUTH_TOKEN')?MODULE_PAYMENT_FRITES_MWSAUTH_TOKEN:'',
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
-			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
+			'SignatureVersion' => '2',			
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -117,15 +104,6 @@ class frites_functions {
 	function fritesGetOrderReferenceDetails($OrderReferenceId) {
 		$links = fritesLinks();
 
-		/*$logged = false;
-
-		if (isset($_COOKIE['amazon_Login_state_cache'])) {
-			$login_state = frites_json_decode($_COOKIE['amazon_Login_state_cache'], true);
-			if (isset($login_state['client_id']) && $login_state['client_id'] == MODULE_PAYMENT_FRITES_CLIENT_ID) {
-				$logged = true;
-			}
-		}*/
-
 		$params = array(
 			'AWSAccessKeyId' => MODULE_PAYMENT_FRITES_ACCESSKEY_ID,
 			'Action' => 'GetOrderReferenceDetails',
@@ -133,8 +111,7 @@ class frites_functions {
 			//'AddressConsentToken' => isset($login_state['access_token'])?$login_state['access_token']:'',
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
-			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
+			'SignatureVersion' => '2',			
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -156,8 +133,7 @@ class frites_functions {
 			'MWSAuthToken' => defined('MODULE_PAYMENT_FRITES_MWSAUTH_TOKEN')?MODULE_PAYMENT_FRITES_MWSAUTH_TOKEN:'',
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
-			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
+			'SignatureVersion' => '2',			
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -183,7 +159,6 @@ class frites_functions {
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
 			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -198,7 +173,7 @@ class frites_functions {
 		}
 
 		if (!isset($result['Error']) && (int)$SellerOrderId && $order_status) {
-			$sql = "UPDATE " . TABLE_ORDERS . " SET ";
+			$sql = 'UPDATE ' . TABLE_ORDERS . ' SET ';
 			if ($order_status) {
 				$sql .= "`orders_status` = '".(int)$order_status."' ";
 			}
@@ -208,7 +183,7 @@ class frites_functions {
 			}
 			$db->Execute($sql);
 
-			$status_text = "Amazon action: CloseOrderReference";
+			$status_text = 'Amazon action: CloseOrderReference';
 
 			$sql_data_array = array(
 							array('fieldName'=>'orders_id', 'value'=>(int)$SellerOrderId, 'type'=>'integer'),
@@ -238,7 +213,6 @@ class frites_functions {
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
 			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -253,7 +227,7 @@ class frites_functions {
 		}
 
 		if (!isset($result['Error']) && (int)$SellerOrderId && $order_status) {
-			$sql = "UPDATE " . TABLE_ORDERS . " SET ";
+			$sql = 'UPDATE ' . TABLE_ORDERS . ' SET ';
 
 			if ($order_status) {
 				$sql .= "`orders_status` = '".(int)$order_status."' ";
@@ -267,7 +241,7 @@ class frites_functions {
 
 			$db->Execute($sql);
 
-			$status_text = "Amazon action: Cancel";
+			$status_text = 'Amazon action: Cancel';
 
 			$sql_data_array = array(
 							array('fieldName'=>'orders_id', 'value'=>(int)$SellerOrderId, 'type'=>'integer'),
@@ -300,11 +274,8 @@ class frites_functions {
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
 			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'TransactionTimeout' => '0',
-			//'CaptureNow' => $CaptureNow,
-			//'SoftDescriptor' => 'C_'.abs(crc32(HTTP_SERVER)).'_'.$SellerOrderId,
 			'Version' => '2013-01-01'
 		);
 
@@ -320,7 +291,7 @@ class frites_functions {
 		}
 
 		if (!isset($result['Error']) && isset($result['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId']) && (int)$SellerOrderId) {
-			$sql = "UPDATE " . TABLE_ORDERS . " SET ";
+			$sql = 'UPDATE ' . TABLE_ORDERS . ' SET ';
 
 			if ($order_status) {
 				$sql .= "`orders_status` = '".(int)$order_status."', ";
@@ -335,7 +306,7 @@ class frites_functions {
 
 			$db->Execute($sql);
 
-			$status_text = "Amazon action: Authorize";
+			$status_text = 'Amazon action: Authorize';
 			$status_text .= "\nAuthorizationId: ".$result['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
 
 			if (isset($result['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State'])) {
@@ -376,8 +347,7 @@ class frites_functions {
 			'MWSAuthToken' => defined('MODULE_PAYMENT_FRITES_MWSAUTH_TOKEN')?MODULE_PAYMENT_FRITES_MWSAUTH_TOKEN:'',
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
-			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
+			'SignatureVersion' => '2',			
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -406,7 +376,6 @@ class frites_functions {
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
 			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -421,7 +390,7 @@ class frites_functions {
 		}
 
 		if (!isset($result['Error']) && isset($result['CaptureResult']['CaptureDetails']['AmazonCaptureId']) && (int)$SellerOrderId) {
-			$sql = "UPDATE " . TABLE_ORDERS . " SET ";
+			$sql = 'UPDATE ' . TABLE_ORDERS . ' SET ';
 
 			if ($order_status) {
 				$sql .= "`orders_status` = '".(int)$order_status."', ";
@@ -436,7 +405,7 @@ class frites_functions {
 
 			$db->Execute($sql);
 
-			$status_text = "Amazon action: Capture";
+			$status_text = 'Amazon action: Capture';
 			$status_text .= "\nCaptureId: ".$result['CaptureResult']['CaptureDetails']['AmazonCaptureId'];
 			$status_text .= "\nAmount: ".$CaptureAmount.$CaptureAmountCurrency;
 
@@ -465,7 +434,6 @@ class frites_functions {
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
 			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -494,7 +462,6 @@ class frites_functions {
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
 			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -509,7 +476,7 @@ class frites_functions {
 		}
 
 		if (!isset($result['Error']) && isset($result['RefundResult']['RefundDetails']['AmazonRefundId']) && (int)$SellerOrderId) {
-			$sql = "UPDATE " . TABLE_ORDERS . " SET ";
+			$sql = 'UPDATE ' . TABLE_ORDERS . ' SET ';
 			if ($order_status) {
 				$sql .= "`orders_status` = '".(int)$order_status."', ";
 			}
@@ -522,7 +489,7 @@ class frites_functions {
 
 			$db->Execute($sql);
 
-			$status_text = "Amazon action: Refund";
+			$status_text = 'Amazon action: Refund';
 			$status_text .= "\nAuthorizationId: ".$result['RefundResult']['RefundDetails']['AmazonRefundId'];
 			$status_text .= "\nAmount: ".$RefundAmount.$RefundAmountCurrency;
 
@@ -551,7 +518,6 @@ class frites_functions {
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
 			'SignatureVersion' => '2',
-			//'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
 			'Timestamp' => gmdate("Y-m-d\TH:i:s\\Z", time()),
 			'Version' => '2013-01-01'
 		);
@@ -619,7 +585,7 @@ class frites_functions {
 		}
 
 		if (isset($respond['SetOrderReferenceDetailsResult']['OrderReferenceDetails']['Constraints']['Constraint']['ConstraintID'])) {
-			$result = 'AMAZON FRITES ERROR: '.$respond['SetOrderReferenceDetailsResult']['OrderReferenceDetails']['Constraints']['Constraint']['ConstraintID'] . " " .
+			$result = 'AMAZON FRITES ERROR: '.$respond['SetOrderReferenceDetailsResult']['OrderReferenceDetails']['Constraints']['Constraint']['ConstraintID'] . ' ' .
 									$respond['SetOrderReferenceDetailsResult']['OrderReferenceDetails']['Constraints']['Constraint']['Description'];
 		}
 
@@ -637,90 +603,19 @@ class frites_functions {
 
 		$result = frites_json_decode(frites_json_encode((array)$xml_arr), true);
 
-//fritesWriteLog(PHP_VERSION, $xml_arr, frites_json_encode((array)$xml_arr), $result);
+
 
 		return $result;
 	}
 
 
-	// build query strings with RFC 3986 encoding for PHP < 5.4
-	// does not have $numeric_prefix or $enc_type options
-	// note per the rawurlencode man page:
-	// Prior to PHP 5.3.0, rawurlencode encoded tildes (~) as per  RFC 1738.
-
-	/*function frites_http_build_query_rfc_3986_webiprog($query_data,$arg_separator='&')
-	{
-		$r = '';
-		$query_data = (array) $query_data;
-		if(!empty($query_data))
-		{
-			foreach($query_data as $k=>$query_var)
-			{
-				$r .= $arg_separator;
-				$r .= $k;
-				$r .= '=';
-				$r .= rawurlencode($query_var);
-			}
-		}
-		return trim($r,$arg_separator);
-
-	}
-
-	function frites_build_query_webiprog(array $params, $encoding = PHP_QUERY_RFC3986)
-	 {
-	  if (!$params) {
-		return '';
-	  }
-
-	  if ($encoding === false) {
-		$encoder = function($str) {
-		  return $str;
-		};
-	  }
-	  elseif ($encoding == PHP_QUERY_RFC3986) {
-		$encoder = 'rawurlencode';
-	  }
-	  elseif ($encoding == PHP_QUERY_RFC1738) {
-		$encoder = 'urlencode';
-	  }
-	  else {
-		  return '';
-		//throw new \InvalidArgumentException('Invalid type');
-	  }
-
-	  $qs = '';
-	  foreach ($params as $k => $v) {
-		$k = $encoder($k);
-		if (!is_array($v)) {
-		  $qs .= $k;
-		  if ($v !== null) {
-			$qs .= '=' . $encoder($v);
-		  }
-		  $qs .= '&';
-		}
-		else {
-		  foreach ($v as $vv) {
-			$qs .= $k;
-			if ($vv !== null) {
-			  $qs .= '=' . $encoder($vv);
-			}
-			$qs .= '&';
-		  }
-		}
-	  }
-
-	  return $qs ? (string) substr($qs, 0, -1) : '';
-	}*/
-
-
+	
 	function fritesSendSignedCurl($host, $params, $uri = '/', $method = 'POST', $protocol = 'https://') {
 		$host = strtolower($host);
 
 		$params_str = '';
 
-		//echo "<pre>"; var_export($params); echo "</pre>";
-		// exit;
-		//fixed by oppo webiprog.com  (oleg@webiprog.com)
+	
 
 		foreach ($params as $param => $value) {
 			if (strlen($value)) {
@@ -728,43 +623,24 @@ class frites_functions {
 			}
 		}
 
-
-		/*
-		if (function_exists('http_build_query')) {
-			$url_string = http_build_query($params,'','&',PHP_QUERY_RFC3986);
-		}else {
-		 if (!defined('PHP_QUERY_RFC1738')) define('PHP_QUERY_RFC1738', 1);
-		 if (!defined('PHP_QUERY_RFC3986')) define('PHP_QUERY_RFC3986', 2);
-		   $url_string =build_query_webiprog($params);
-		 }
-		*/
-
-
-		//$params_str=$url_string;
-
 		$request = $method."\n".$host."\n".$uri."\n".$params_str;
 
 		$signature = base64_encode(hash_hmac('sha256', $request, MODULE_PAYMENT_FRITES_SECRETKEY_ID, true));
 
 		$signature = str_replace('%7E', '~', rawurlencode($signature));
 
-		$link = $protocol.$host.$uri."?".$params_str.'&Signature='.$signature;
+		$link = $protocol.$host.$uri. '?' .$params_str.'&Signature='.$signature;
 
 		$curl = curl_init($link);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
 		if ($method == 'POST') {
 			curl_setopt($curl, CURLOPT_POST, true);
-			//fixed by oppo webiprog.com  (oleg@webiprog.com)
+			
 			curl_setopt($curl, CURLOPT_POSTFIELDS, '');
-		}
+		}		
 
-		//curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-		//curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-
-		$result = curl_exec($curl);
-		//echo "<pre>"; var_export($result); echo "</pre>";
-		//exit;
+		$result = curl_exec($curl);		
 
 		curl_close($curl);
 
@@ -856,7 +732,7 @@ class frites_functions {
 
 		if (isset($_COOKIE['amazon_Login_state_cache'])) {
 			$login_state = frites_json_decode($_COOKIE['amazon_Login_state_cache'], true);
-			//$login_state = json_decode($_COOKIE['amazon_Login_state_cache'], true);
+			
 			$login_results['login_state'] = $login_state;
 
 			if (!$logged && isset($login_state['client_id'])
@@ -961,12 +837,7 @@ class frites_functions {
 
 
 	function frites_define_currency() {
-		/*if (!defined('PAYMENT_FRITES_CURRENCY')) {
-			define('PAYMENT_FRITES_CURRENCY', MODULE_PAYMENT_FRITES_CURRENCY);
-		}
-		$_SESSION['currency'] = MODULE_PAYMENT_FRITES_CURRENCY;
-		return MODULE_PAYMENT_FRITES_CURRENCY;*/
-
+		
 		$currency = frites_get_currency();
 
 		if (!defined('PAYMENT_FRITES_CURRENCY')) {
@@ -1033,7 +904,7 @@ class frites_functions {
 	}
 
 	function frites_get_store_country() {
-		$sql = "SELECT * FROM " . TABLE_COUNTRIES . " WHERE countries_id = ".(int)STORE_COUNTRY;
+		$sql = 'SELECT * FROM ' . TABLE_COUNTRIES . ' WHERE countries_id = ' .(int)STORE_COUNTRY;
 
 		$results = frites_db($sql);
 
@@ -1045,7 +916,7 @@ class frites_functions {
 
 		$countries = array();
 
-		$sql = "SELECT * FROM " . TABLE_COUNTRIES . " WHERE countries_iso_code_2 IN ('" . implode("','", $frites_allowed_countries) . "')";
+		$sql = 'SELECT * FROM ' . TABLE_COUNTRIES . " WHERE countries_iso_code_2 IN ('" . implode("','", $frites_allowed_countries) . "')";
 
 		$countries_query = frites_db($sql);
 
@@ -1053,17 +924,7 @@ class frites_functions {
 			$countries[$c['countries_iso_code_2']] = $c;
 		}
 
-		/*
-		[DE] => Array
-		(
-			[countries_id] => 81
-			[countries_name] => Germany
-			[countries_iso_code_2] => DE
-			[countries_iso_code_3] => DEU
-			[address_format_id] => 5
-			[status] => 1
-		)
-		*/
+
 
 		return $countries;
 	}
@@ -1076,7 +937,7 @@ class frites_functions {
 
 		$countries_names = array();
 
-		$sql = "SELECT * FROM " . TABLE_COUNTRIES_NAME . " WHERE language_id = '" . (int)$language_id . "' AND countries_id IN ('" . implode("','", $frites_allowed_countries_names) . "')";
+		$sql = 'SELECT * FROM ' . TABLE_COUNTRIES_NAME . " WHERE language_id = '" . (int)$language_id . "' AND countries_id IN ('" . implode("','", $frites_allowed_countries_names) . "')";
 
 		$countries_names_query = frites_db($sql);
 
@@ -1148,15 +1009,13 @@ class frites_functions {
 	function frites_json_decode($json, $assoc = false, $depth = 512, $options = 0) {
 		$json = frites_string_decode($json);
 
-		if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+		if (PHP_VERSION_ID < 50300) {
 			$json = stripcslashes($json);
 			$result = json_decode($json, $assoc);
-		} elseif (version_compare(PHP_VERSION, '5.4.0', '<')) {
+		} elseif (PHP_VERSION_ID < 50400) {
 			$json = stripcslashes($json);
-			//$json = str_replace('\"', '"', $json);
 			$result = json_decode($json, $assoc, $depth);
-		} elseif (version_compare(PHP_VERSION, '5.5.0', '<')) {
-			//$json = stripcslashes($json);
+		} elseif (PHP_VERSION_ID < 50500) {
 			$result = json_decode($json, $assoc, $depth, $options);
 		} else {
 			$result = json_decode($json, $assoc, $depth, $options);
@@ -1166,26 +1025,22 @@ class frites_functions {
 	}
 
 	function frites_json_encode($value, $options = 0, $depth = 512) {
-		if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+		if (PHP_VERSION_ID < 50300) {
 			$result = json_encode($value);
-		} elseif (version_compare(PHP_VERSION, '5.4.0', '<')) {
+		} elseif (PHP_VERSION_ID < 50400) {
 			$result = json_encode($value, $options);
-		} elseif (version_compare(PHP_VERSION, '5.5.0', '<')) {
+		} elseif (PHP_VERSION_ID < 50500) {
 			$result = json_encode($value, $options);
 		} else {
 			$result = json_encode($value, $options, $depth);
 		}
-
-		//$result = htmlentities($result, ENT_NOQUOTES);
-		//$result = frites_string_decode($result);
+		
 
 		return $result;
 	}
 
 	function frites_string_decode($str) {
-		//if (function_exists('mb_convert_encoding')) {
-			//$str = mb_convert_encoding($str, 'UTF-8');
-		//}
+		
 
 		$i=65535;
 		while ($i > 0) {
@@ -1194,7 +1049,7 @@ class frites_functions {
 			$i--;
 		}
 
-		//$str = preg_replace("/\\\\u([0-9abcdef]{4})/", "&#x$1;", $str);
+		
 
 		return $str;
 	}
@@ -1212,12 +1067,7 @@ class frites_functions {
 
 		$logdir = (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/logs/';
 
-		/*if (defined('DIR_FS_LOGS') && DIR_FS_LOGS) {
-			$logdir = DIR_FS_LOGS;
-		} else {
-			$logdir = DIR_WS_MODULES . 'payment/frites/logs/';
-		}*/
-
+		
 		if (!is_dir($logdir)) {
 			mkdir($logdir, 0777,true);
 			chmod($logdir, 0777);
@@ -1226,7 +1076,7 @@ class frites_functions {
 		$numargs = func_num_args();
 		$arg_list = func_get_args();
 
-		$fhandle = fopen($logdir.$logfilename, "a");
+		$fhandle = fopen($logdir.$logfilename, 'ab');
 		fwrite($fhandle, date('Y-m-d H:i:s').': *****************************************************************************************************************'."\n");
 
 		// save a backtrace of called functions excluding this function
@@ -1245,7 +1095,7 @@ class frites_functions {
 	}
 
 
-	//fixed by oppo webiprog.com  (oleg@webiprog.com)
+	
 	function fritesWriteLog_oppo($message) {
 		$logfilename = '/frites_' . date('Y-m-d') . '.log';
 

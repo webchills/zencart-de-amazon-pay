@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_confirmation_default.php 2018-01-08 17:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_confirmation_default.php 2018-03-21 09:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
@@ -23,77 +23,8 @@
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 
 
-
-
-
-<?php /* ?>
-<div id="checkoutBillto" class="back">
-<h2 id="checkoutConfirmDefaultBillingAddress"><?php echo HEADING_BILLING_ADDRESS; ?></h2>
-<?php if (!$flagDisablePaymentAddressChange) { ?>
-<div class="buttonRow forward"><?php echo '<a href="' . $links['checkout_frites_payment'] . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
-<?php } ?>
-
-<address><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></address>
-
 <?php
-  $class =& $_SESSION['payment'];
-?>
-
-<h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3> 
-<h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $GLOBALS[$class]->title; ?></h4>
-
-<?php
-  if (is_array($payment_modules->modules)) {
-    if ($confirmation = $payment_modules->confirmation()) {
-?>
-<div class="important"><?php echo $confirmation['title']; ?></div>
-<?php
-    }
-?>
-<div class="important">
-<?php
-      for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
-?>
-<div class="back"><?php echo $confirmation['fields'][$i]['title']; ?></div>
-<div ><?php echo $confirmation['fields'][$i]['field']; ?></div>
-<?php
-     }
-?>
-      </div>
-<?php
-  }
-?>
-
-<br class="clearBoth" />
-</div>
-
-<?php
-  if ($_SESSION['sendto'] != false) {
-?>
-<div id="checkoutShipto" class="forward">
-<h2 id="checkoutConfirmDefaultShippingAddress"><?php echo HEADING_DELIVERY_ADDRESS; ?></h2>
-<div class="buttonRow forward"><?php echo '<a href="' . $editShippingButtonLink . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
-
-<address><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></address>
-
-<?php
-    if ($order->info['shipping_method']) {
-?>
-<h3 id="checkoutConfirmDefaultShipment"><?php echo HEADING_SHIPPING_METHOD; ?></h3>
-<h4 id="checkoutConfirmDefaultShipmentTitle"><?php echo $order->info['shipping_method']; ?></h4>
-
-<?php
-    }
-?>
-</div>
-<?php
-  }
-?>
-
-<?php */ ?>
-
-<?php
-	// get default language and code array('code' => 'EN', 'locale' => 'en_DB');
+	// get default language and code array
 	$frites_lang = frites_get_default_language();
 ?>
 <div align="center">
@@ -107,8 +38,6 @@
 <div id="walletWidgetDiv"></div>
 <?php
 	$wallet_ro = true;
-
-	//if (MODULE_PAYMENT_FRITES_IPN_DEBUG == 'Log File' && isset($_SESSION['frites_errors'])) {print_r($_SESSION['frites_errors']);}
 
 	if (isset($_SESSION['frites_errors']['Constraints']['Constraint']['ConstraintID']) && $_SESSION['frites_errors']['Constraints']['Constraint']['ConstraintID'] == 'PaymentPlanNotSet') {
 		$wallet_ro = false;
@@ -164,18 +93,12 @@
 <div class="buttonRow forward"><?php echo '<a href="' . $links['checkout_frites_shipping'] . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
 <br class="clearBoth" />
 <hr />
-<?php
-// always show comments
-//  if ($order->info['comments']) {
-?>
 
 <h2 id="checkoutConfirmDefaultHeadingComments"><?php echo HEADING_ORDER_COMMENTS; ?></h2>
 <div class="buttonRow forward"><?php echo  '<a href="' . $links['checkout_frites_payment'] . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
 <div><?php echo (empty($order->info['comments']) ? NO_COMMENTS_TEXT : nl2br(zen_output_string_protected($order->info['comments'])) . zen_draw_hidden_field('comments', $order->info['comments'])); ?></div>
 <br class="clearBoth" />
-<?php
-//  }
-?>
+
 <hr />
 <div id="cartandsum">
 <h2 id="checkoutConfirmDefaultHeadingCart"><?php echo HEADING_PRODUCTS; ?></h2>
@@ -192,11 +115,11 @@
 <?php  } //endif flagAnyOutOfStock ?>
 
 
-      <table id="cartContentsDisplay">
-        <tr class="cartTableHeading">
-          <th scope="col" id="ccQuantityHeading"><?php echo TABLE_HEADING_QUANTITY; ?></th>
-          <th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
-        <th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTIMAGE; ?></th>
+<table id="cartContentsDisplay">
+<tr class="cartTableHeading">
+<th scope="col" id="ccQuantityHeading"><?php echo TABLE_HEADING_QUANTITY; ?></th>
+<th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+<th scope="col" id="ccProductsHeading"><?php echo TABLE_HEADING_PRODUCTIMAGE; ?></th>
 <?php
   // If there are tax groups, display the tax columns for price breakdown
   if (sizeof($order->info['tax_groups']) > 1) {
@@ -269,14 +192,13 @@
   }
 ?>
 
-
 <?php
  // zollhinweis für nicht EU
         $dest_country = isset ($order->delivery['country']['iso_code_2']) ? $order->delivery['country']['iso_code_2'] : 0 ;
         $dest_zone = 0;
         $error = false;
         $countries_table = EU_COUNTRIES_FOR_LAST_STEP; 
-        $country_zones = explode(",", $countries_table);
+        $country_zones = explode(',', $countries_table);
         if ((!in_array($dest_country, $country_zones))&& ($order->delivery['country']['id'] != '')) {
             $dest_zone = $i;
             echo TEXT_NON_EU_COUNTRIES;

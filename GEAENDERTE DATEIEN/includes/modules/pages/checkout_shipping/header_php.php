@@ -3,19 +3,19 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php for Amazon Pay 2017-11-15 19:41:51Z webchills $
+ * @version $Id: header_php.php for Amazon Pay 2018-03-21 09:41:51Z webchills $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
-  require_once(DIR_WS_CLASSES . 'http_client.php');
+  require_once DIR_WS_CLASSES . 'http_client.php';
   
   // check if is mobile or tablet visitor to allow order report mobile, tablet or desktop
   
  if (!class_exists('Mobile_Detect')) {
-  include_once(DIR_WS_CLASSES . 'Mobile_Detect.php');
+  include_once DIR_WS_CLASSES . 'Mobile_Detect.php';
 }
 $detect = new Mobile_Detect;
 $isMobile = $detect->isMobile();
@@ -59,10 +59,10 @@ $_SESSION['mobilevisitor'] = false;
   
   if (MODULE_PAYMENT_FRITES_PHONE_REQUIRED == 'True') {  
  
-    $phone_query = "SELECT customers_telephone
-                            FROM   " . TABLE_CUSTOMERS . "
+    $phone_query = 'SELECT customers_telephone
+                            FROM   ' . TABLE_CUSTOMERS . '
                             WHERE  customers_id = :customersID     
-                            ";
+                            ';
 $phone_query = $db->bindVars($phone_query, ':customersID', $_SESSION['customer_id'], 'integer');
     
     $check_phone = $db->Execute($phone_query);
@@ -74,10 +74,10 @@ $phone_query = $db->bindVars($phone_query, ':customersID', $_SESSION['customer_i
   }
     
     // verify if last name exists
-    $lastname_query = "SELECT customers_lastname
-                            FROM   " . TABLE_CUSTOMERS . "
+    $lastname_query = 'SELECT customers_lastname
+                            FROM   ' . TABLE_CUSTOMERS . '
                             WHERE  customers_id = :customersID     
-                            ";
+                            ';
 $lastname_query = $db->bindVars($lastname_query, ':customersID', $_SESSION['customer_id'], 'integer');
     
     $check_lastname = $db->Execute($lastname_query);
@@ -91,10 +91,10 @@ $lastname_query = $db->bindVars($lastname_query, ':customersID', $_SESSION['cust
     if (!$_SESSION['sendto']) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   }
-    $street_query = "SELECT entry_street_address
-                            FROM   " . TABLE_ADDRESS_BOOK . "
+    $street_query = 'SELECT entry_street_address
+                            FROM   ' . TABLE_ADDRESS_BOOK . '
                             WHERE  customers_id = :customersID
-                            AND    address_book_id = :addressBookID";   
+                            AND    address_book_id = :addressBookID';
                             
 $street_query = $db->bindVars($street_query, ':customersID', $_SESSION['customer_id'], 'integer');
 $street_query = $db->bindVars($street_query, ':addressBookID', $_SESSION['sendto'], 'integer');
@@ -124,10 +124,10 @@ $street_query = $db->bindVars($street_query, ':addressBookID', $_SESSION['sendto
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   } else {
 // verify the selected shipping address
-    $check_address_query = "SELECT count(*) AS total
-                            FROM   " . TABLE_ADDRESS_BOOK . "
+    $check_address_query = 'SELECT count(*) AS total
+                            FROM   ' . TABLE_ADDRESS_BOOK . '
                             WHERE  customers_id = :customersID
-                            AND    address_book_id = :addressBookID";
+                            AND    address_book_id = :addressBookID';
 
     $check_address_query = $db->bindVars($check_address_query, ':customersID', $_SESSION['customer_id'], 'integer');
     $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['sendto'], 'integer');
@@ -139,7 +139,7 @@ $street_query = $db->bindVars($street_query, ':addressBookID', $_SESSION['sendto
     }
   }
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require DIR_WS_CLASSES . 'order.php';
   $order = new order;
 
 // register a random ID in the session to check throughout the checkout procedure
@@ -167,7 +167,7 @@ if (isset($_SESSION['cart']->cartID)) {
   $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
-  require(DIR_WS_CLASSES . 'shipping.php');
+  require DIR_WS_CLASSES . 'shipping.php';
   $shipping_modules = new shipping;
 
   $pass = true;
@@ -198,7 +198,7 @@ if (isset($_SESSION['cart']->cartID)) {
     $free_shipping = false;
   }
 
-  require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+  require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
   if (isset($_SESSION['comments'])) {
     $comments = $_SESSION['comments'];
@@ -214,7 +214,7 @@ if (isset($_SESSION['cart']->cartID)) {
     $quote = array();
 
     if ( (zen_count_shipping_modules() > 0) || ($free_shipping == true) ) {
-      if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
+      if ( isset($_POST['shipping']) && strpos($_POST['shipping'], '_')) {
         /**
          * check to be sure submitted data hasn't been tampered with
          */
@@ -233,9 +233,9 @@ if (isset($_SESSION['cart']->cartID)) {
           if (isset($quote[0]['error'])) {
             unset($_SESSION['shipping']);
           } else {
-            if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
+            if ( isset($quote[0]['methods'][0]['title']) && isset($quote[0]['methods'][0]['cost'])) {
               $_SESSION['shipping'] = array('id' => $_POST['shipping'],
-                                'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
+                                'title' => ($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')',
                                 'cost' => $quote[0]['methods'][0]['cost']);
 
               zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -277,7 +277,7 @@ if (isset($_SESSION['cart']->cartID)) {
 // If the module's status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-  if ((!isset($_SESSION['shipping']) || (!isset($_SESSION['shipping']['id']) || $_SESSION['shipping']['id'] == '') && zen_count_shipping_modules() >= 1)) $_SESSION['shipping'] = $shipping_modules->cheapest();
+  if (!isset($_SESSION['shipping']) || (!isset($_SESSION['shipping']['id']) || $_SESSION['shipping']['id'] == '') && zen_count_shipping_modules() >= 1) $_SESSION['shipping'] = $shipping_modules->cheapest();
 
 
   // Should address-edit button be offered?
@@ -293,7 +293,7 @@ if (isset($_SESSION['cart']->cartID)) {
     }
   }
 
-  require(DIR_WS_CLASSES . 'payment.php');
+  require DIR_WS_CLASSES . 'payment.php';
   $payment_modules = new payment;
 
   $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));

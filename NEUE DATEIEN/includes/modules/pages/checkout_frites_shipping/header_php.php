@@ -1,17 +1,17 @@
 <?php
 /**
- * @package Amazon Pay for Zen Cart German
+ * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 2018-01-06 14:29:16Z webchills $
+ * @version $Id: header_php.php 2018-03-21 10:29:16Z webchills $
  */
  
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
 
-include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php');
+include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php';
 include_once zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/', 'checkout_shipping.php', 'false');
 
 global $order;
@@ -52,11 +52,11 @@ if (isset($_POST['function']) && $_POST['function'] == 'GetOrderDestination' && 
 if (!$language_id) {
       $language_id = $_SESSION['languages_id'];
     }
-		$countries_query = "select c.countries_id, c.countries_iso_code_2, cn.language_id, cn.countries_name from " . TABLE_COUNTRIES . " c, " . TABLE_COUNTRIES_NAME . " cn where cn.language_id = '" . (int)$language_id . "' AND c.countries_iso_code_2 = '" . $country_iso_code_2 . "'";
+		$countries_query = 'select c.countries_id, c.countries_iso_code_2, cn.language_id, cn.countries_name from ' . TABLE_COUNTRIES . ' c, ' . TABLE_COUNTRIES_NAME . " cn where cn.language_id = '" . (int)$language_id . "' AND c.countries_iso_code_2 = '" . $country_iso_code_2 . "'";
 		$countries = $db->Execute($countries_query);
 
 		if (!empty($_SESSION['customer_id']) && empty($_SESSION['sendto'])) {
-			$customer_query = "SELECT `customers_default_address_id` FROM " . TABLE_CUSTOMERS . " WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'";
+			$customer_query = 'SELECT `customers_default_address_id` FROM ' . TABLE_CUSTOMERS . " WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'";
 			$customer = $db->Execute($customer_query);
 			$_SESSION['sendto'] = (int)$customer->fields['customers_default_address_id'];
 		}
@@ -67,7 +67,7 @@ if (!$language_id) {
 		if (!empty($frites_city) && !empty($countries->fields['countries_id'])) {
 			$entry_country_id = (int)$countries->fields['countries_id'];
 			$entry_country_name = $countries->fields['countries_name'];
-			$states = frites_db("SELECT zone_id, zone_name FROM ".TABLE_ZONES." WHERE zone_country_id = ".(int)$entry_country_id." AND LOWER(zone_name) = LOWER('".zen_db_prepare_input($frites_city)."')");
+			$states = frites_db('SELECT zone_id, zone_name FROM ' .TABLE_ZONES. ' WHERE zone_country_id = ' .(int)$entry_country_id." AND LOWER(zone_name) = LOWER('".zen_db_prepare_input($frites_city)."')");
 			if (!empty($states->row['zone_id'])) {
 				$entry_zone_name = $states->row['zone_name'];
 				$entry_zone_id = (int)$states->row['zone_id'];
@@ -76,8 +76,8 @@ if (!$language_id) {
 //echo '<pre>'.__METHOD__.' ['.__LINE__.']: '; print_r($entry_country_id); echo '</pre>';die();
 		if ($entry_country_id)
 		{
-			$shipping_address_query = "UPDATE " . TABLE_ADDRESS_BOOK . " SET
-										entry_country_id = " . (int)$entry_country_id . ",
+			$shipping_address_query = 'UPDATE ' . TABLE_ADDRESS_BOOK . ' SET
+										entry_country_id = ' . (int)$entry_country_id . ",
 										entry_city = '" . zen_db_prepare_input($frites_city) . "',
 										entry_state = '" . zen_db_prepare_input($frites_state) . "',
 										entry_postcode = '" . zen_db_prepare_input($frites_zip) . "',
@@ -91,7 +91,6 @@ if (!$language_id) {
 			$shipping_address = $db->Execute($shipping_address_query);
 		}
 	}
-//echo '<pre>'.__METHOD__.' ['.__LINE__.']: '; print_r($entry_country_id . ':' . $entry_zone_id); echo '</pre>';die();
 
 	//$response->status = frites_functions::check_status((int)$entry_country_id, (int)$entry_zone_id);
 	if (((int)$entry_country_id || (int)$entry_zone_id) && (int)MODULE_PAYMENT_FRITES_ZONE) {
@@ -105,14 +104,12 @@ if (!$language_id) {
 	if (!$response->status) {
 		$response->error = MODULE_PAYMENT_FRITES_ZONE_DENIED.' ('.($entry_country_name ? $entry_country_name : $country_iso_code_2).', '.$frites_city.', '.$frites_zip.')';
 	}
-
 	echo frites_json_encode($response);
 
 	die();
 }
 
-//echo '<pre>';print_r('shipping: '.MODULE_SHIPPING_INSTALLED);echo '</pre>';
-//echo '<pre>';print_r($GLOBALS);echo '</pre>';
+
 // if there is nothing in the customers cart, redirect them to the shopping cart page
 if ($_SESSION['cart']->count_contents() <= 0) {
 	zen_redirect(zen_href_link(FILENAME_TIME_OUT));
@@ -147,10 +144,10 @@ if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   } else {
 // verify the selected shipping address
-    $check_address_query = "SELECT count(*) AS total
-                            FROM   " . TABLE_ADDRESS_BOOK . "
+    $check_address_query = 'SELECT count(*) AS total
+                            FROM   ' . TABLE_ADDRESS_BOOK . '
                             WHERE  customers_id = :customersID
-                            AND    address_book_id = :addressBookID";
+                            AND    address_book_id = :addressBookID';
 
     $check_address_query = $db->bindVars($check_address_query, ':customersID', $_SESSION['customer_id'], 'integer');
     $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['sendto'], 'integer');
@@ -178,7 +175,7 @@ if (isset($_SESSION['cart']->cartID)) {
 	zen_redirect(zen_href_link(FILENAME_TIME_OUT));
 }
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 // TODO fix countries and currencies
 //Set order currency
@@ -188,7 +185,7 @@ if (isset($_SESSION['comments'])) {
 	$comments = $_SESSION['comments'];
 }
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require DIR_WS_CLASSES . 'order.php';
   $order = new order;
 
 // register a random ID in the session to check throughout the checkout procedure
@@ -218,7 +215,7 @@ $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();*/
 
 // load all enabled shipping modules
-require(DIR_WS_CLASSES . 'shipping.php');
+require DIR_WS_CLASSES . 'shipping.php';
 $shipping_modules = new shipping;
 
 $pass = true;
@@ -262,7 +259,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['
 	$shipping = array();
 
 	if ((zen_count_shipping_modules() > 0) || ($free_shipping == true)) {
-		if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
+		if (isset($_POST['shipping']) && strpos($_POST['shipping'], '_')) {
 			/**
 			 * check to be sure submitted data hasn't been tampered with
 			 */
@@ -284,8 +281,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['
 				if (isset($quote['error'])) {
 					$_SESSION['shipping'] = '';
 				} else {
-					if ((isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost']))) {
-						$_SESSION['shipping'] = array('id' => $_SESSION['shipping'], 'title' => (($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'), 'cost' => $quote[0]['methods'][0]['cost']);
+					if (isset($quote[0]['methods'][0]['title']) && isset($quote[0]['methods'][0]['cost'])) {
+						$_SESSION['shipping'] = array('id' => $_SESSION['shipping'], 'title' => ($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')', 'cost' => $quote[0]['methods'][0]['cost']);
 
 						$_SESSION['frites']['shipping_selected'] = 1;
 						zen_redirect($links['checkout_frites_payment']);

@@ -6,14 +6,14 @@
  * Displays the allowed payment modules, for selection by customer.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_payment_default.php for Amazon Pay 2017-11-15 19:23:42Z webchills $
+ * @version $Id: tpl_checkout_payment_default.php for Amazon Pay 2018-03-21 09:23:42Z webchills $
  */
 ?>
 <?php /* START AMAZON FRITES */ ?>
-	<?php include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php'); ?>
+	<?php include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php'; ?>
 	<?php $links = fritesLinks(); ?>
 	<script type='text/javascript'>
 		window.onAmazonLoginReady = function() {
@@ -92,7 +92,7 @@
 <legend><?php echo $selection[$i]['module']; ?></legend>
 <?php echo $selection[$i]['redeem_instructions']; ?>
 <div class="gvBal larger"><?php echo $selection[$i]['checkbox']; ?></div>
-<label class="inputLabel"<?php echo ($selection[$i]['fields'][$j]['tag']) ? ' for="'.$selection[$i]['fields'][$j]['tag'].'"': ''; ?>><?php echo $selection[$i]['fields'][$j]['title']; ?></label>
+<label class="inputLabel"<?php echo $selection[$i]['fields'][$j]['tag'] ? ' for="'.$selection[$i]['fields'][$j]['tag'].'"': ''; ?>><?php echo $selection[$i]['fields'][$j]['title']; ?></label>
 <?php echo $selection[$i]['fields'][$j]['field']; ?>
 </fieldset>
 <?php

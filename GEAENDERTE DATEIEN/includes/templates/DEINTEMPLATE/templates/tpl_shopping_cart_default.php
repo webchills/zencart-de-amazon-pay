@@ -9,7 +9,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_shopping_cart_default.php for Amazon Pay 2018-01-16 17:33:58Z webchills $
+ * @version $Id: tpl_shopping_cart_default.php for Amazon Pay 2018-03-21 09:33:58Z webchills $
  */
 ?>
 <div class="centerColumn" id="shoppingCartDefault">
@@ -180,12 +180,13 @@
 <!-- ** BEGIN PAYPAL EXPRESS CHECKOUT ** -->
 <?php  // the tpl_ec_button template only displays EC option if cart contents >0 and value >0
 if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True') {
-  include(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/tpl_ec_button.php');
+  include DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/tpl_ec_button.php';
 }
 ?>
 <!-- ** END PAYPAL EXPRESS CHECKOUT ** -->
 
 <!-- ** BEGIN AMAZON FRITES LOGIN ** -->
+<br class="clearBoth" />
 	<?php  // the tpl_login_button template only displays LOGIN option if cart contents > 0 and value > 0 and if there are no virtual products
 	
 	if (defined('MODULE_PAYMENT_FRITES_STATUS') && MODULE_PAYMENT_FRITES_STATUS == 'True') {
@@ -193,7 +194,7 @@ if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATU
   if ($_SESSION['cart']->in_cart_check('products_virtual')) {
   	//
   } else {
-	  include(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_login_button.php');
+	  include DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_login_button.php';
 	}
 }
 
@@ -206,7 +207,7 @@ if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATU
  * load the shipping estimator code if needed
  */
 ?>
-      <?php require(DIR_WS_MODULES . zen_get_module_directory('shipping_estimator.php')); ?>
+      <?php require DIR_WS_MODULES . zen_get_module_directory('shipping_estimator.php'); ?>
 
 <?php
       }
@@ -230,7 +231,7 @@ while (!$show_display_shopping_cart_empty->EOF) {
  * display the Featured Products Center Box
  */
 ?>
-<?php require($template->get_template_dir('tpl_modules_featured_products.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_products.php'); ?>
+<?php require $template->get_template_dir('tpl_modules_featured_products.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_products.php'; ?>
 <?php } ?>
 
 <?php
@@ -240,7 +241,7 @@ while (!$show_display_shopping_cart_empty->EOF) {
  * display the Special Products Center Box
  */
 ?>
-<?php require($template->get_template_dir('tpl_modules_specials_default.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_specials_default.php'); ?>
+<?php require $template->get_template_dir('tpl_modules_specials_default.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_specials_default.php'; ?>
 <?php } ?>
 
 <?php
@@ -250,12 +251,12 @@ while (!$show_display_shopping_cart_empty->EOF) {
  * display the New Products Center Box
  */
 ?>
-<?php require($template->get_template_dir('tpl_modules_whats_new.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_whats_new.php'); ?>
+<?php require $template->get_template_dir('tpl_modules_whats_new.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_whats_new.php'; ?>
 <?php } ?>
 
 <?php
   if ($show_display_shopping_cart_empty->fields['configuration_key'] == 'SHOW_SHOPPING_CART_EMPTY_UPCOMING') {
-    include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_UPCOMING_PRODUCTS));
+    include DIR_WS_MODULES . zen_get_module_directory(FILENAME_UPCOMING_PRODUCTS);
   }
 ?>
 <?php

@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php for Amazon Pay 2018-01-16 17:49:16Z webchills $
+ * @version $Id: header_php.php for Amazon Pay 2018-03-21 09:49:16Z webchills $
  */
 
 // This should be first line of the script:
@@ -42,20 +42,18 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
 }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
-  if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-    zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-  }
+if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID'] && $_SESSION['cart']->cartID != $_SESSION['cartID']) {
+  zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 
 // verify if phone number exists
 
  if (MODULE_PAYMENT_FRITES_PHONE_REQUIRED == 'True') {  
 
-    $phone_query = "SELECT customers_telephone
-                            FROM   " . TABLE_CUSTOMERS . "
+    $phone_query = 'SELECT customers_telephone
+                            FROM   ' . TABLE_CUSTOMERS . '
                             WHERE  customers_id = :customersID     
-                            ";
+                            ';
 $phone_query = $db->bindVars($phone_query, ':customersID', $_SESSION['customer_id'], 'integer');
     
     $check_phone = $db->Execute($phone_query);
@@ -67,10 +65,10 @@ $phone_query = $db->bindVars($phone_query, ':customersID', $_SESSION['customer_i
   }
     
     // verify if last name exists
-    $lastname_query = "SELECT customers_lastname
-                            FROM   " . TABLE_CUSTOMERS . "
+    $lastname_query = 'SELECT customers_lastname
+                            FROM   ' . TABLE_CUSTOMERS . '
                             WHERE  customers_id = :customersID     
-                            ";
+                            ';
 $lastname_query = $db->bindVars($lastname_query, ':customersID', $_SESSION['customer_id'], 'integer');
     
     $check_lastname = $db->Execute($lastname_query);
@@ -84,10 +82,10 @@ $lastname_query = $db->bindVars($lastname_query, ':customersID', $_SESSION['cust
     if (!$_SESSION['sendto']) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   }
-    $street_query = "SELECT entry_street_address
-                            FROM   " . TABLE_ADDRESS_BOOK . "
+    $street_query = 'SELECT entry_street_address
+                            FROM   ' . TABLE_ADDRESS_BOOK . '
                             WHERE  customers_id = :customersID
-                            AND    address_book_id = :addressBookID";   
+                            AND    address_book_id = :addressBookID';
                             
 $street_query = $db->bindVars($street_query, ':customersID', $_SESSION['customer_id'], 'integer');
 $street_query = $db->bindVars($street_query, ':addressBookID', $_SESSION['sendto'], 'integer');
@@ -114,9 +112,9 @@ if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
 
 // get coupon code
 if ($_SESSION['cc_id']) {
-  $discount_coupon_query = "SELECT coupon_code
-                            FROM " . TABLE_COUPONS . "
-                            WHERE coupon_id = :couponID";
+  $discount_coupon_query = 'SELECT coupon_code
+                            FROM ' . TABLE_COUPONS . '
+                            WHERE coupon_id = :couponID';
 
   $discount_coupon_query = $db->bindVars($discount_coupon_query, ':couponID', $_SESSION['cc_id'], 'integer');
   $discount_coupon = $db->Execute($discount_coupon_query);
@@ -127,9 +125,9 @@ if (!$_SESSION['billto']) {
   $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 } else {
   // verify the selected billing address
-  $check_address_query = "SELECT count(*) AS total FROM " . TABLE_ADDRESS_BOOK . "
+  $check_address_query = 'SELECT count(*) AS total FROM ' . TABLE_ADDRESS_BOOK . '
                           WHERE customers_id = :customersID
-                          AND address_book_id = :addressBookID";
+                          AND address_book_id = :addressBookID';
 
   $check_address_query = $db->bindVars($check_address_query, ':customersID', $_SESSION['customer_id'], 'integer');
   $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['billto'], 'integer');
@@ -141,12 +139,12 @@ if (!$_SESSION['billto']) {
   }
 }
 
-require(DIR_WS_CLASSES . 'order.php');
+require DIR_WS_CLASSES . 'order.php';
 $order = new order;
 // Load the selected shipping module(needed to calculate tax correctly)
-require(DIR_WS_CLASSES . 'shipping.php');
+require DIR_WS_CLASSES . 'shipping.php';
 $shipping_modules = new shipping($_SESSION['shipping']);
-require(DIR_WS_CLASSES . 'order_total.php');
+require DIR_WS_CLASSES . 'order_total.php';
 $order_total_modules = new order_total;
 $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
@@ -158,12 +156,12 @@ $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled payment modules
-require(DIR_WS_CLASSES . 'payment.php');
+require DIR_WS_CLASSES . 'payment.php';
 $payment_modules = new payment;
 $flagOnSubmit = sizeof($payment_modules->selection());
 
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 if (isset($_GET['payment_error']) && is_object(${$_GET['payment_error']}) && ($error = ${$_GET['payment_error']}->get_error())) {
   $messageStack->add('checkout_payment', $error['error'], 'error');
@@ -173,4 +171,3 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_PAYMENT');
-?>

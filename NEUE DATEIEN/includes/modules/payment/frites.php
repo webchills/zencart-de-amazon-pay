@@ -1,30 +1,27 @@
 <?php
 /**
- * Amazon Pay Payment Module for Zen Cart German
- *
- * @package paymentMethod
+ * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: frites.php 2018-01-16 17:08:16Z webchills $
+ * @version $Id: frites.php 2018-03-21 16:29:16Z webchills $
  */
 
 /**
  *  ensure dependencies are loaded
  */
-include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php');
+include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php';
 
 error_reporting(E_ALL & ~E_NOTICE);
 
 class frites {
-	var $code, $title, $description, $enabled;
+	public $code, $title, $description, $enabled;
 
 // class constructor
-	function __construct() {
+	public function __construct() {
 		global $order;
 
-		//if (!defined('MODULE_PAYMENT_FRITES_STATUS')) define('MODULE_PAYMENT_FRITES_STATUS', 0);
-		//if (!defined('MODULE_PAYMENT_FRITES_SORT_ORDER')) define('MODULE_PAYMENT_FRITES_SORT_ORDER', 0);
 		if (!defined('MODULE_PAYMENT_FRITES_HANDLER')) define('MODULE_PAYMENT_FRITES_HANDLER', '');
 		if (!defined('MODULE_PAYMENT_FRITES_ORDER_STATUS_ID')) define('MODULE_PAYMENT_FRITES_ORDER_STATUS_ID', 0);
 
@@ -53,46 +50,19 @@ class frites {
 		}
 
 		if (is_object($order)) $this->update_status();
-
-//echo '<pre>'.__METHOD__.': '; print_r(frites_get_default_country_id()); echo '</pre>';
-//echo '<pre>'.__METHOD__.': '; print_r(frites_get_frites_countries()); echo '</pre>';
 	}
 
 // class methods
-	function update_status() {
+	public function update_status() {
 		global $order, $db;
+		 
 
-		// TODO fix countries and currencies
-		if ($this->enabled && (int)MODULE_PAYMENT_FRITES_ZONE > 0 && isset($order->billing['country']['id'])) {
-			$check_flag = false;
-			//$check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_FRITES_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-			$check = $db->Execute("select zone_country_id, zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_FRITES_ZONE . "' order by zone_id");
-			while (!$check->EOF) {
-				if ($check->fields['zone_id'] < 1) {
-					$check_flag = true;
-					break;
-				} elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
-					$check_flag = true;
-					break;
-				} elseif ($check->fields['zone_country_id'] == 0 || $check->fields['zone_country_id'] == $order->delivery['country']['id']) {
-					$check_flag = true;
-					break;
-				}
-				$check->MoveNext();
-			}
-
-			if ($check_flag == false) {
-				$this->enabled = false;
-			}
-		}
-
-		// disable the module if the order only contains virtual products
-		if ($this->enabled == true) {
-		if ($order->content_type == 'virtual') {
+// disable the module if the order only contains virtual products
+		if ($this->enabled == true && $order->content_type == 'virtual') {
 			$this->enabled = false;
 		}
+		
 		}
-	}
 
 	/**
 	* JS validation which does error-checking of data-entry if this module is selected for use
@@ -100,7 +70,7 @@ class frites {
 	*
 	* @return string
 	*/
-	function javascript_validation() {
+	public function javascript_validation() {
 		$frites_enabled = (defined('MODULE_PAYMENT_FRITES_STATUS') && MODULE_PAYMENT_FRITES_STATUS == 'True');
 		if ($frites_enabled) {
 			$links = fritesLinks();
@@ -109,8 +79,7 @@ class frites {
 			$frites_lang = frites_get_default_language();
 			$js = 'if (payment_value == "' . $this->code . '") {' . "\n" ;
 
-//			if (!empty($frites_logged['status'])) {
-				//frites user is logged
+
 
 				$js .= "
 					OffAmazonPayments.jQuery('#AmazonPayButtonHidden').remove();
@@ -146,11 +115,7 @@ class frites {
 
 				";
 
-//			} else {
-				//amazon user is not logged
-//			}
 
-			//$js .= "\nthrow new Error('AMAZON is selected. This is not an error. This is just to abort javascript;');";
 			$js .= "\nreturn false;";
 			$js .="\n".'}' . "\n";
 			return $js;
@@ -164,7 +129,7 @@ class frites {
 	*
 	* @return array
 	*/
-	function selection() {
+	public function selection() {
 		return array(
 			'id' => $this->code,
 			'module' => $this->title
@@ -177,7 +142,7 @@ class frites {
 	*
 	* @return boolean
 	*/
-	function pre_confirmation_check() {
+	public function pre_confirmation_check() {
 		return false;
 	}
 
@@ -187,7 +152,7 @@ class frites {
 	* Launches before checkout page
 	* @return boolean
 	*/
-	function confirmation() {
+	public function confirmation() {
 		if (isset($_SESSION['frites'])) {
 			//unset($_SESSION['frites']);
 		}
@@ -201,29 +166,22 @@ class frites {
 	*
 	* @return string
 	*/
-	function process_button() {
+	public function process_button() {
 
 		global $order;
-//echo '<pre>';print_r($_SESSION);echo '</pre>';
-//echo '<pre>';print_r($order);echo '</pre>';
+
 		$html = '';
 
 		$links = fritesLinks();
 
 		$frites_logged = fritesLogin();
 
-//echo '<pre>';print_r($frites_logged);echo '</pre>';
+
 ?>
 		<div class="frites-payment">
 			<h2><?php echo MODULE_PAYMENT_FRITES_TEXT_TITLE ?> <?php /*if ($frites_logged['status']) { ?><a href="javascript:void(0)" id="Logout" style="display:inline-block;"><h3>Logout</h3></a><?php }*/ ?></h2>
 
 
-<?php
-		if (MODULE_PAYMENT_FRITES_IPN_DEBUG == 'Log File') {
-			//echo '<pre>';print_r($frites_logged);echo '</pre>';
-			//echo '<pre>';print_r($order);echo '</pre>';
-		}
-?>
 
 			<input id="fritesOrderReferenceId" type="hidden" name="frites[OrderReferenceId]" value="<?php echo isset($_SESSION['frites']['OrderReferenceId'])?$_SESSION['frites']['OrderReferenceId']:'' ?>" />
 
@@ -254,28 +212,7 @@ class frites {
 	<?php } ?>
 <?php } ?>
 
-<?php /* ?>
-			<script type='text/javascript'>
-				window.onAmazonLoginReady = function() {
-					amazon.Login.setClientId('<?php echo MODULE_PAYMENT_FRITES_CLIENT_ID; ?>');
-				};
-			</script>
-			<script type='text/javascript' src='<?php echo $links['widget_link'] ?>?sellerId=<?php echo MODULE_PAYMENT_FRITES_MERCHANT_ID; ?>'></script>
 
-			<?php if ($frites_logged['status']) { ?>
-
-			<script type="text/javascript">
-				document.getElementById('Logout').onclick = function() {
-					try {
-						amazon.Login.logout();
-						location.reload(true);
-					} catch(e) {}
-				};
-			</script>
-			<br />
-
-			<?php } ?>
-<?php */ ?>
 		</div>
 
 
@@ -286,13 +223,12 @@ class frites {
 	/**
 	* Store transaction info to the order and process any results that come back from the payment gateway
 	*/
-	function before_process() {
+	public function before_process() {
 		global $order, $currencies, $messageStack, $order_total_modules;
-		//return fritesSetOrderReferenceDetails($order);
+		
 
 		if (isset($_POST['frites']['OrderReferenceId']) && $_POST['frites']['OrderReferenceId']) {
-//echo '<pre>'.__METHOD__.' ['.__LINE__.']: ';print_r($_SESSION['frites']);echo '</pre>';
-//echo '<pre>'.__METHOD__.' ['.__LINE__.']: ';print_r($_POST['frites']);echo '</pre>';die();
+
 			$_SESSION['frites'] = $_POST['frites'];
 		}
 	}
@@ -303,7 +239,7 @@ class frites {
 	*
 	* @return boolean
 	*/
-	function after_process() {
+	public function after_process() {
 		global $insert_id, $db, $order, $messageStack, $currencies, $zco_notifier;
 
 		$errors = array();
@@ -348,7 +284,7 @@ class frites {
 			} else {
 				$order_status = $order->info['order_status'];
 			}
-//$fritesOrderReference = fritesGetOrderReferenceDetails($_SESSION['frites']['OrderReferenceId']);
+
 			if (!$errors) {
 				//****CONFIRM ORDER
 				$fritesConfirmOrderReference = fritesConfirmOrderReference($_SESSION['frites']['OrderReferenceId']);
@@ -357,16 +293,9 @@ class frites {
 					$errors['amazonXmlError'] = fritesParseXmlErrors($fritesConfirmOrderReference);
 				}
 			}
-//$fritesOrderReference = fritesGetOrderReferenceDetails($_SESSION['frites']['OrderReferenceId']);
-			if (!$errors && ((defined('MODULE_PAYMENT_FRITES_AUTHORIZATION') && MODULE_PAYMENT_FRITES_AUTHORIZATION == 'True')
-					|| (defined('MODULE_PAYMENT_FRITES_CAPTURE') && MODULE_PAYMENT_FRITES_CAPTURE == 'When the order is placed'))) {
-				//****AUTHORIZATION
 
-				/*if (defined('MODULE_PAYMENT_FRITES_CAPTURE') && MODULE_PAYMENT_FRITES_CAPTURE == 'When the order is placed') {
-					$CaptureNow = 'true';
-				} else {
-					$CaptureNow = 'false';
-				}*/
+			if (!$errors) {
+				
 
 				$SellerAuthorizationNote = '';
 				$SandboxSimulation = array();
@@ -408,7 +337,7 @@ class frites {
 				if (fritesParseXmlErrors($fritesAuthorize)) {
 					$errors['amazonXmlError'] = fritesParseXmlErrors($fritesAuthorize);
 				}
-//$fritesOrderReference = fritesGetOrderReferenceDetails($_SESSION['frites']['OrderReferenceId']);
+
 				//Check Authorization status
 				$AuthorizationStatus = isset($fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State'])?$fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State']:'';
 				$AuthorizationReasonCode = isset($fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'])?' ReasonCode: '.$fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode']:'';
@@ -416,25 +345,11 @@ class frites {
 				$AuthorizationRightStatus = (bool)($AuthorizationStatus == 'Open' || $AuthorizationStatus == 'Pending');
 
 				if ((!$errors && !$AuthorizationRightStatus) || !empty($InvalidPaymentMethod)) {
-					//$errors['AuthorizationStatus'] = MODULE_PAYMENT_FRITES_TEXT_ERROR_AUTHORIZATION.$AuthorizationStatus.$AuthorizationReasonCode;
+					
 					$errors['AuthorizationStatus'] = MODULE_PAYMENT_FRITES_TEXT_ERROR_AUTHORIZATION.$AuthorizationStatus;
 					$_SESSION['frites_errors']['AuthorizationStatus']['State'] = $AuthorizationStatus;
 					$_SESSION['frites_errors']['AuthorizationStatus']['ReasonCode'] = $AuthorizationReasonCode;
-					//Logout if ReasonState != InvalidPaymentMethod
-					//if ($fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['ReasonCode'] != 'InvalidPaymentMethod') {
-						//$messageStack->add_session('shopping_cart', $errors['AuthorizationStatus'].MODULE_PAYMENT_FRITES_TEXT_ERROR_SELECT_DIFFERENT_PAYMENT, 'error');
-						//fritesLogout();
-						//zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
-						/*$messageStack->add_session('checkout_shipping', $errors['AuthorizationStatus'].MODULE_PAYMENT_FRITES_TEXT_ERROR_SELECT_DIFFERENT_PAYMENT, 'error');
-						//$messageStack->add_session('checkout_payment', $errors['AuthorizationStatus'].MODULE_PAYMENT_FRITES_TEXT_ERROR_SELECT_DIFFERENT_PAYMENT, 'error');
-						//fritesLogout();
-						fritesCancelOrderReference($_SESSION['frites']['OrderReferenceId'], $errors['AuthorizationStatus'], $insert_id);
-
-						zen_redirect($links['checkout_frites_shipping']);*/
-
-
-
-						//$fritesConfirmOrderReference = fritesConfirmOrderReference($_SESSION['frites']['OrderReferenceId']);
+					
 
 						$fritesOrderReference = fritesSetOrderReferenceDetails(
 													$_SESSION['frites']['OrderReferenceId'],
@@ -446,7 +361,7 @@ class frites {
 
 						$order_status = MODULE_PAYMENT_FRITES_ORDER_STATUS_CANCELED_ID;
 
-						$sql = "UPDATE " . TABLE_ORDERS . " SET ";
+						$sql = 'UPDATE ' . TABLE_ORDERS . ' SET ';
 						$sql .= "`orders_status` = '".(int)$order_status."' ".
 							"WHERE `orders_id` = '".(int)$insert_id."'";
 						$db->Execute($sql);
@@ -454,13 +369,8 @@ class frites {
 						$_SESSION['frites']['shipping_selected'] = 1;
 						$_SESSION['frites']['payment_selected'] = 0;
 						$messageStack->add_session('checkout', $errors['AuthorizationStatus'].MODULE_PAYMENT_FRITES_TEXT_ERROR_SELECT_DIFFERENT_PAYMENT, 'error');
-						//fritesCancelOrderReference($_SESSION['frites']['OrderReferenceId'], $errors['AuthorizationStatus'], $insert_id);
-						zen_redirect($links['checkout_frites_shipping']);
-
-
-
-
-					//}
+						
+						zen_redirect($links['checkout_frites_shipping']);					
 				}
 
 				if (MODULE_PAYMENT_FRITES_ORDER_STATUS_AUTHORIZED_ID > 0) {
@@ -470,7 +380,7 @@ class frites {
 
 			if (!$errors
 					&& isset($fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'])
-					&& defined('MODULE_PAYMENT_FRITES_CAPTURE') && MODULE_PAYMENT_FRITES_CAPTURE == 'When the order is placed') {
+					) {
 
 				//****CAPTURE
 				$fritesCapture = fritesCapture(
@@ -536,10 +446,7 @@ class frites {
 										$OrderReferenceDetails['OrderTotal']['CurrencyCode'];
 				}
 
-				//if (isset($fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State'])) {
-				//	$status_text .= "\nAuthorizationStatus: ".$fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AuthorizationStatus']['State'];
-				//}
-
+				
 				if (isset($fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'])) {
 					$status_text .= "\nAmazonAuthorizationId: ".$fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'];
 				}
@@ -600,17 +507,17 @@ class frites {
                 $customers_street_address = '';
                 $customers_company = '';
 				
-				if ((isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2'])) && (!isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1']))) {
+				if (isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2']) && !isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1'])) {
 					$customers_street_address .= ' '. $OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2'];
 					$customers_company = '';
 				}
 				
-				if ((isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1'])) && (!isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2']))) {
+				if (isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1']) && !isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2'])) {
 					$customers_street_address .= ' '. $OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1'];
 					$customers_company = '';
 				}
 				
-				if ((isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2'])) && (isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1']))) {
+				if (isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2']) && isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1'])) {
 					$customers_company .= $OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1'];
 					$customers_street_address .= $OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2'];
 				}
@@ -621,9 +528,7 @@ class frites {
 				if (isset($OrderReferenceDetails['Destination']['PhysicalDestination']['City'])) {
 					$customers_city = $OrderReferenceDetails['Destination']['PhysicalDestination']['City'];
 				}
-				//if (isset($OrderReferenceDetails['Destination']['PhysicalDestination']['StateOrRegion'])) {
-				//	$customers_state = $OrderReferenceDetails['Destination']['PhysicalDestination']['StateOrRegion'];
-				//}
+				
 				if (isset($OrderReferenceDetails['Destination']['PhysicalDestination']['CountryCode'])) {
 					$customers_country = $OrderReferenceDetails['Destination']['PhysicalDestination']['CountryCode'];
 				}
@@ -632,19 +537,19 @@ class frites {
       $language_id = $_SESSION['languages_id'];
     }
     
-    $countries_names_query = "select c.countries_id, c.countries_iso_code_2, cn.language_id, cn.countries_name from " . TABLE_COUNTRIES . " c, " . TABLE_COUNTRIES_NAME . " cn where cn.language_id = '" . $language_id . "' AND c.countries_iso_code_2 = '" . $customers_country . "' AND cn.countries_id = c.countries_id";
+    $countries_names_query = 'select c.countries_id, c.countries_iso_code_2, cn.language_id, cn.countries_name from ' . TABLE_COUNTRIES . ' c, ' . TABLE_COUNTRIES_NAME . " cn where cn.language_id = '" . $language_id . "' AND c.countries_iso_code_2 = '" . $customers_country . "' AND cn.countries_id = c.countries_id";
 		$countries_names = $db->Execute($countries_names_query);   
     
 				
 		$customers_country_name = $countries_names->fields['countries_name'];		
 		
-		$countries_id_query = "select countries_id, countries_iso_code_2 from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . $customers_country . "'";
+		$countries_id_query = 'select countries_id, countries_iso_code_2 from ' . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . $customers_country . "'";
 		$countries_id = $db->Execute($countries_id_query);  
     
 				
 		$customers_country_id = $countries_id->fields['countries_id'];						
 
-				$sql = "UPDATE " . TABLE_ORDERS . " SET ";
+				$sql = 'UPDATE ' . TABLE_ORDERS . ' SET ';
 				if (isset($customers_telephone)) {
 					$sql .= "`customers_telephone` = '".zen_db_prepare_input($customers_telephone)."', ";
 				}
@@ -671,7 +576,7 @@ class frites {
 					$sql .= "`delivery_country` = '".zen_db_prepare_input($customers_country_name)."', ";
 					$sql .= "`billing_country` = '".zen_db_prepare_input($customers_country_name)."', ";
 
-					$address_format_query = "select address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . zen_db_prepare_input($customers_country) . "'";
+					$address_format_query = 'select address_format_id from ' . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . zen_db_prepare_input($customers_country) . "'";
 					$address_format = $db->Execute($address_format_query);
 					if ($address_format->RecordCount() > 0) {
 						$address_format_id = $address_format->fields['address_format_id'];
@@ -707,7 +612,7 @@ class frites {
 				}
 
 				$db->Execute($sql);
-				$sql2 = "UPDATE " . TABLE_ADDRESS_BOOK . " SET ";
+				$sql2 = 'UPDATE ' . TABLE_ADDRESS_BOOK . ' SET ';
 				
 				
 				
@@ -724,27 +629,25 @@ class frites {
 					
 				
 				if (isset($customers_country)) {
-					$sql2 .= "`entry_country_id` = '".zen_db_prepare_input($customers_country_id)."', ";
-					
-
-					
+					$sql2 .= "`entry_country_id` = '".zen_db_prepare_input($customers_country_id)."', ";			
+				
 				}
+				
 				if (isset($customers_street_address)) {
 					$sql2 .= "`entry_street_address` = '".zen_db_prepare_input(frites_string_decode($customers_street_address))."', ";
 					
 				}
 				
-				//if (isset($customers_company)) {
-				//	$sql2 .= "`entry_company` = '".zen_db_prepare_input(frites_string_decode($customers_company))."', ";
-					
-				//}
+				if (isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine2']) && isset($OrderReferenceDetails['Destination']['PhysicalDestination']['AddressLine1'])) {
+					$sql2 .= "`entry_company` = '".zen_db_prepare_input(frites_string_decode($customers_company))."', ";
+				} else {
+				$sql2 .= "`entry_company` = '', ";		
+				}
+			
 
-				$sql2 .= "`entry_firstname` = '-', ";
+				$sql2 .= "`entry_firstname` = '-', ";				
 
 				
-
-				
-
 				$sql2 .= "`entry_lastname` = '".zen_db_prepare_input($customers_name)."' ".
 				"WHERE `customers_id`  = '" . (int)$_SESSION['customer_id'] . "' and `address_book_id` = '" . (int)$_SESSION['sendto'] . "'";
 				
@@ -752,20 +655,13 @@ class frites {
 				$db->Execute($sql2);
 				if (isset($customers_telephone)) {
 				
-				$sql3 = "UPDATE " . TABLE_CUSTOMERS . " SET ";
+				$sql3 = 'UPDATE ' . TABLE_CUSTOMERS . ' SET ';
 				
+												
+				$sql3 .= "`customers_telephone` = '".zen_db_prepare_input($customers_telephone)."' ".
+				"WHERE `customers_id`  = '" . (int)$_SESSION['customer_id'] . "'";			
 				
-				
-				
-					
-					$sql3 .= "`customers_telephone` = '".zen_db_prepare_input($customers_telephone)."' ".
-				"WHERE `customers_id`  = '" . (int)$_SESSION['customer_id'] . "'";
-				
-				
-
-				
-				
-				
+								
 				$db->Execute($sql3);
 				}
 				
@@ -774,7 +670,7 @@ class frites {
 				// send order confirmation when the final address data are received
 $order->send_order_email($insert_id, 2);
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
-				//ipn_debug_email('Order added: ' . $insert_id . "\n" . 'Amazon status: ' . $status_text);
+	
 			}
 		}
 
@@ -787,11 +683,7 @@ $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
 				unset($_SESSION['frites_login']);
 			}
 
-/*echo '<pre>';print_r($fritesOrderReference);echo '</pre>';
-echo '<pre>';print_r($fritesConfirmOrderReference);echo '</pre>';
-echo '<pre>';print_r($fritesAuthorize);echo '</pre>';
-if ($errors) {echo '<pre>';print_r($errors);echo '</pre>';}
-die();*/
+
 
 			return true;
 		} else {
@@ -799,86 +691,82 @@ die();*/
 				zen_redirect($redirect);
 			}
 
-			//$_SESSION['frites_errors'] = $errors;
+			
 			foreach ($errors as $error) {
 				$messageStack->add_session('checkout', $error, 'error');
 			}
 
-			//zen_redirect(zen_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+			
 			zen_redirect($links['checkout_frites_confirmation']);
 
-			/*if (isset($errors)) {
-				zen_redirect($links['checkout_frites_shipping']);
-			} else {
-				zen_redirect($links['checkout_frites_confirmation']);
-			}*/
+			
 
 			return false;
 		}
 
-		//return false;
+		
 	}
 
-	function get_error() {
+	public function get_error() {
 		return false;
 	}
 
-	function check() {
+	public function check() {
 		global $db;
 		if (!isset($this->_check)) {
-			$check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_FRITES_STATUS'");
+			$check_query = $db->Execute('select configuration_value from ' . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_FRITES_STATUS'");
 			$this->_check = $check_query->RecordCount();
 		}
 		return $this->_check;
 	}
 
-	function check_frites_fields() {
+	public function check_frites_fields() {
 		global $db, $messageStack;
 
 		$sql = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '".TABLE_CUSTOMERS."' AND COLUMN_NAME = 'customers_frites_userid'";
 		$result = $db->Execute($sql);
 		if ($result->RecordCount() == 0) {
-			$db->Execute("ALTER TABLE `".TABLE_CUSTOMERS."` ADD `customers_frites_userid` VARCHAR(96) NOT NULL DEFAULT '';");
+			$db->Execute('ALTER TABLE `' .TABLE_CUSTOMERS."` ADD `customers_frites_userid` VARCHAR(96) NOT NULL DEFAULT '';");
 		}
 
 		$sql = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '".TABLE_ORDERS."' AND COLUMN_NAME = 'frites_order_reference_id'";
 		$result = $db->Execute($sql);
 		if ($result->RecordCount() == 0) {
-			$db->Execute("ALTER TABLE `".TABLE_ORDERS."` ADD `frites_order_reference_id` VARCHAR(96) NOT NULL DEFAULT '';");
+			$db->Execute('ALTER TABLE `' .TABLE_ORDERS."` ADD `frites_order_reference_id` VARCHAR(96) NOT NULL DEFAULT '';");
 		}
 
 		$sql = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '".TABLE_ORDERS."' AND COLUMN_NAME = 'frites_order_authorization_id'";
 		$result = $db->Execute($sql);
 		if ($result->RecordCount() == 0) {
-			$db->Execute("ALTER TABLE `".TABLE_ORDERS."` ADD `frites_order_authorization_id` VARCHAR(96) NOT NULL DEFAULT '';");
+			$db->Execute('ALTER TABLE `' .TABLE_ORDERS."` ADD `frites_order_authorization_id` VARCHAR(96) NOT NULL DEFAULT '';");
 		}
 
 		$sql = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '".TABLE_ORDERS."' AND COLUMN_NAME = 'frites_order_capture_id'";
 		$result = $db->Execute($sql);
 		if ($result->RecordCount() == 0) {
-			$db->Execute("ALTER TABLE `".TABLE_ORDERS."` ADD `frites_order_capture_id` VARCHAR(96) NOT NULL DEFAULT '';");
+			$db->Execute('ALTER TABLE `' .TABLE_ORDERS."` ADD `frites_order_capture_id` VARCHAR(96) NOT NULL DEFAULT '';");
 		}
 
 		$sql = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '".TABLE_ORDERS."' AND COLUMN_NAME = 'frites_order_refund_id'";
 		$result = $db->Execute($sql);
 		if ($result->RecordCount() == 0) {
-			$db->Execute("ALTER TABLE `".TABLE_ORDERS."` ADD `frites_order_refund_id` VARCHAR(96) NOT NULL DEFAULT '';");
+			$db->Execute('ALTER TABLE `' .TABLE_ORDERS."` ADD `frites_order_refund_id` VARCHAR(96) NOT NULL DEFAULT '';");
 		}
 
 		$sql = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '".TABLE_ORDERS."' AND COLUMN_NAME = 'frites_debug_info'";
 		$result = $db->Execute($sql);
 		if ($result->RecordCount() == 0) {
-			$db->Execute("ALTER TABLE `".TABLE_ORDERS."` ADD `frites_debug_info` LONGTEXT NULL;");
+			$db->Execute('ALTER TABLE `' .TABLE_ORDERS. '` ADD `frites_debug_info` LONGTEXT NULL;');
 		}
 
 		$sql = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '".DB_DATABASE."' AND TABLE_NAME = '".TABLE_ADDRESS_BOOK."' AND COLUMN_NAME = 'frites_debug_info'";
 		$result = $db->Execute($sql);
 		if ($result->RecordCount() == 0) {
-			$db->Execute("ALTER TABLE `".TABLE_ADDRESS_BOOK."` ADD `frites_debug_info` LONGTEXT NULL;");
+			$db->Execute('ALTER TABLE `' .TABLE_ADDRESS_BOOK. '` ADD `frites_debug_info` LONGTEXT NULL;');
 		}
 	}
 
-	function install() {
+	public function install() {
 		global $db, $messageStack;
 		if (defined('MODULE_PAYMENT_FRITES_STATUS')) {
 			$messageStack->add_session('AMAZON FRITES module already installed.', 'error');
@@ -887,46 +775,45 @@ die();*/
 		}
 
 		$this->check_frites_fields();
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) values ('Version', 'MODULE_PAYMENT_FRITES_MODULE_VERSION', '2.0.0', 'Version installed:', '6', 0, NOW(), NOW(), NULL, 'zen_cfg_read_only(');");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_STATUS_TITLE)."', 'MODULE_PAYMENT_FRITES_STATUS', 'True', '".zen_db_input(MODULE_PAYMENT_FRITES_STATUS_DESC)."', '6', '1', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ZONE_TITLE)."', 'MODULE_PAYMENT_FRITES_ZONE', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_ZONE_DESC)."', '6', '2', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_ID', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_ID_DESC)."', '6', '3', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_AUTHORIZED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_AUTHORIZED_ID', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_AUTHORIZED_ID_DESC)."', '6', '4', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CAPTURED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_CAPTURED_ID', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CAPTURED_ID_DESC)."', '6', '5', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CLOSED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_CLOSED_ID', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CLOSED_ID_DESC)."', '6', '6', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CANCELED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_CANCELED_ID', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CANCELED_ID_DESC)."', '6', '7', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_REFUNDED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_REFUNDED_ID', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_REFUNDED_ID_DESC)."', '6', '8', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_SORT_ORDER_TITLE)."', 'MODULE_PAYMENT_FRITES_SORT_ORDER', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_SORT_ORDER_DESC)."', '6', '9', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_MERCHANT_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_MERCHANT_ID','', '".zen_db_input(MODULE_PAYMENT_FRITES_MERCHANT_ID_DESC)."', '6', '10', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_CLIENT_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_CLIENT_ID','', '".zen_db_input(MODULE_PAYMENT_FRITES_CLIENT_ID_DESC)."', '6', '11', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ACCESSKEY_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ACCESSKEY_ID','', '".zen_db_input(MODULE_PAYMENT_FRITES_ACCESSKEY_ID_DESC)."', '6', '12', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_SECRETKEY_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_SECRETKEY_ID','', '".zen_db_input(MODULE_PAYMENT_FRITES_SECRETKEY_ID_DESC)."', '6', '13', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_CURRENCY_TITLE)."', 'MODULE_PAYMENT_FRITES_CURRENCY', 'Euro Region', '".zen_db_input(MODULE_PAYMENT_FRITES_CURRENCY_DESC)."', '6', '14', 'zen_cfg_select_option(array(\'Euro Region\', \'United Kingdom\'), ', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_REGION_TITLE)."', 'MODULE_PAYMENT_FRITES_REGION', 'DE', '".zen_db_input(MODULE_PAYMENT_FRITES_REGION_DESC)."', '6', '15', 'zen_cfg_select_option(array(\'UK\', \'DE\', \'FR\', \'IT\', \'ES\'), ', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_CAPTURE_TITLE)."', 'MODULE_PAYMENT_FRITES_CAPTURE', 'When the order is placed', '".zen_db_input(MODULE_PAYMENT_FRITES_CAPTURE_DESC)."', '6', '16', 'zen_cfg_select_option(array(\'When the order is shipped\', \'When the order is placed\'), ', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_HANDLER_TITLE)."', 'MODULE_PAYMENT_FRITES_HANDLER', 'sandbox', '".zen_db_input(MODULE_PAYMENT_FRITES_HANDLER_DESC)."', '6', '17', 'zen_cfg_select_option(array(\'production\', \'sandbox\'), ', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_IPN_DEBUG_TITLE)."', 'MODULE_PAYMENT_FRITES_IPN_DEBUG', 'Off', '".zen_db_input(MODULE_PAYMENT_FRITES_IPN_DEBUG_DESC)."', '6', '18', 'zen_cfg_select_option(array(\'Off\',\'Log File\'), ', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_BUTTON_SIZE_TITLE)."', 'MODULE_PAYMENT_FRITES_BUTTON_SIZE', 'small', '".zen_db_input(MODULE_PAYMENT_FRITES_BUTTON_SIZE_DESC)."', '6', '19', 'zen_cfg_select_option(array(\'small\',\'medium\',\'large\',\'x-large\'), ', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_BUTTON_STYLE_TITLE)."', 'MODULE_PAYMENT_FRITES_BUTTON_STYLE', 'Gold', '".zen_db_input(MODULE_PAYMENT_FRITES_BUTTON_STYLE_DESC)."', '6', '20', 'zen_cfg_select_option(array(\'Gold\',\'DarkGray\',\'LightGray\'), ', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_WIDTH_TITLE)."', 'MODULE_PAYMENT_FRITES_ADDRESSBOOK_WIDTH','700px', '".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_WIDTH_DESC)."', '6', '21', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT_TITLE)."', 'MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT','260px', '".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT_DESC)."', '6', '22', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH_TITLE)."', 'MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH','700px', '".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH_DESC)."', '6', '23', now())");
-		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_TITLE)."', 'MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT','260px', '".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_DESC)."', '6', '24', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PHONE_REQUIRED_TITLE)."', 'MODULE_PAYMENT_FRITES_PHONE_REQUIRED', 'True', '".zen_db_input(MODULE_PAYMENT_FRITES_PHONE_REQUIRED_DESC)."', '6', '25', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    $db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) values ('Version', 'MODULE_PAYMENT_FRITES_MODULE_VERSION', '2.2.0', 'Version installed:', '6', 0, NOW(), NOW(), NULL, 'zen_cfg_read_only(');");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_STATUS_TITLE)."', 'MODULE_PAYMENT_FRITES_STATUS', 'True', '".zen_db_input(MODULE_PAYMENT_FRITES_STATUS_DESC)."', '2', '2', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
+		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) values ('Zoneneinschränkung', 'MODULE_PAYMENT_FRITES_ZONE', '0', 'nicht änderbar', '6', '1', NOW(), NOW(), NULL, 'zen_cfg_read_only(');");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_ID', '2', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_ID_DESC)."', '6', '3', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_AUTHORIZED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_AUTHORIZED_ID', '2', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_AUTHORIZED_ID_DESC)."', '6', '4', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CAPTURED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_CAPTURED_ID', '2', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CAPTURED_ID_DESC)."', '6', '5', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CLOSED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_CLOSED_ID', '2', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CLOSED_ID_DESC)."', '6', '6', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CANCELED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_CANCELED_ID', '5', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_CANCELED_ID_DESC)."', '6', '7', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_REFUNDED_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_REFUNDED_ID', '5', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_REFUNDED_ID_DESC)."', '6', '8', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_SORT_ORDER_TITLE)."', 'MODULE_PAYMENT_FRITES_SORT_ORDER', '0', '".zen_db_input(MODULE_PAYMENT_FRITES_SORT_ORDER_DESC)."', '6', '9', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_MERCHANT_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_MERCHANT_ID','', '".zen_db_input(MODULE_PAYMENT_FRITES_MERCHANT_ID_DESC)."', '6', '10', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_CLIENT_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_CLIENT_ID','', '".zen_db_input(MODULE_PAYMENT_FRITES_CLIENT_ID_DESC)."', '6', '11', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ACCESSKEY_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ACCESSKEY_ID','', '".zen_db_input(MODULE_PAYMENT_FRITES_ACCESSKEY_ID_DESC)."', '6', '12', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_SECRETKEY_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_SECRETKEY_ID','', '".zen_db_input(MODULE_PAYMENT_FRITES_SECRETKEY_ID_DESC)."', '6', '13', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_CURRENCY_TITLE)."', 'MODULE_PAYMENT_FRITES_CURRENCY', 'Euro Region', '".zen_db_input(MODULE_PAYMENT_FRITES_CURRENCY_DESC)."', '6', '14', 'zen_cfg_select_option(array(\'Euro Region\', \'United Kingdom\'), ', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_REGION_TITLE)."', 'MODULE_PAYMENT_FRITES_REGION', 'AT', '".zen_db_input(MODULE_PAYMENT_FRITES_REGION_DESC)."', '6', '15', 'zen_cfg_select_option(array(\'GB\', \'DE\', \'AT\', \'FR\', \'IT\', \'ES\', \'BE\', \'DK\', \'IE\', \'LU\', \'NL\', \'PT\', \'SE\', \'HU\', \'CY\'), ', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_HANDLER_TITLE)."', 'MODULE_PAYMENT_FRITES_HANDLER', 'sandbox', '".zen_db_input(MODULE_PAYMENT_FRITES_HANDLER_DESC)."', '6', '17', 'zen_cfg_select_option(array(\'production\', \'sandbox\'), ', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_IPN_DEBUG_TITLE)."', 'MODULE_PAYMENT_FRITES_IPN_DEBUG', 'Off', '".zen_db_input(MODULE_PAYMENT_FRITES_IPN_DEBUG_DESC)."', '6', '18', 'zen_cfg_select_option(array(\'Off\',\'Log File\'), ', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_BUTTON_SIZE_TITLE)."', 'MODULE_PAYMENT_FRITES_BUTTON_SIZE', 'small', '".zen_db_input(MODULE_PAYMENT_FRITES_BUTTON_SIZE_DESC)."', '6', '19', 'zen_cfg_select_option(array(\'small\',\'medium\',\'large\',\'x-large\'), ', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_BUTTON_STYLE_TITLE)."', 'MODULE_PAYMENT_FRITES_BUTTON_STYLE', 'Gold', '".zen_db_input(MODULE_PAYMENT_FRITES_BUTTON_STYLE_DESC)."', '6', '20', 'zen_cfg_select_option(array(\'Gold\',\'DarkGray\',\'LightGray\'), ', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_WIDTH_TITLE)."', 'MODULE_PAYMENT_FRITES_ADDRESSBOOK_WIDTH','700px', '".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_WIDTH_DESC)."', '6', '21', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT_TITLE)."', 'MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT','260px', '".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT_DESC)."', '6', '22', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH_TITLE)."', 'MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH','700px', '".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH_DESC)."', '6', '23', now())");
+		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_TITLE)."', 'MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT','260px', '".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_DESC)."', '6', '24', now())");
+    $db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PHONE_REQUIRED_TITLE)."', 'MODULE_PAYMENT_FRITES_PHONE_REQUIRED', 'True', '".zen_db_input(MODULE_PAYMENT_FRITES_PHONE_REQUIRED_DESC)."', '6', '25', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
 		
 	}
 
-	function remove() {
+	public function remove() {
 		global $db;
-		$db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_PAYMENT\_FRITES\_%'");
+		$db->Execute('delete from ' . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_PAYMENT\_FRITES\_%'");
 	}
 
-	function keys() {
+	public function keys() {
 		global $db;
 
 		$keys_list = array();
 
-		$check = $db->Execute("select configuration_key from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_PAYMENT\_FRITES\_%' order by sort_order");
+		$check = $db->Execute('select configuration_key from ' . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_PAYMENT\_FRITES\_%' order by sort_order");
 		while (!$check->EOF) {
 			$keys_list[] = $check->fields['configuration_key'];
 			$check->MoveNext();

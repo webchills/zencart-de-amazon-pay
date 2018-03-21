@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Login und Bezahlen via Amazon (Amazon Pay) 2.1.0 für Zen Cart 1.5.5 deutsch</title>
+<title>Login und Bezahlen via Amazon (Amazon Pay) 2.2.0 für Zen Cart 1.5.5 deutsch</title>
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="content-language" content="de">
@@ -12,7 +12,7 @@
 <body>
 <div id="wrapper">
 <div id="header">
-<h1>Login und Bezahlen via Amazon (Amazon Pay) 2.1.0 für Zen Cart 1.5.5 deutsch</h1>
+<h1>Login und Bezahlen via Amazon (Amazon Pay) 2.2.0 für Zen Cart 1.5.5 deutsch</h1>
 </div>
 
 <div id="slidetabsmenu" style="display: none;">
@@ -49,7 +49,7 @@
    <br/>
    Es werden keinerlei Details über die bestellten Artikel an Amazon übermittelt, hier geht es rein um die Bezahlung. Es werden keine Informationen über den Warenkorb-Inhalt an Amazon übermittelt. Lediglich der Gesamtwert des Warenkorbs wird zur Zahlungsabwicklung übermittelt.<br>
    <br/>
-   Amazon Pay steht derzeit nur für Shopinhaber mit Firmensitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien zur Verfügung.</p>
+   Amazon Pay steht derzeit (Stand März 2018) nur für Shopinhaber mit Firmensitz in Deutschland, Österreich, Belgien, Dänemark, Frankreich, Großbritannien, Italien, Irland, Luxemburg, Niederlande, Portugal, Schweden, Spanien, Ungarn oder Zypern  zur Verfügung.</p>
  <p>   Das Modul kann zunächst mit einem Sandbox Account vollständig ohne echte Transaktionen getestet werden.
    
    <br>
@@ -59,7 +59,8 @@
  <ul>
     <li>Zen Cart 1.5.5 deutsch</li>
        <li>Shop verwendet durchgehend SSL</li>
-       <li>Firma des Shopinhabers hat Sitz in Deutschland, Frankreich, Italien, Spanien oder Großbritannien</li>
+       <li>Bundesland ist im Shop NICHT aktiv (Konfiguration &gt; Kundendetails)</li>
+       <li>Firma des Shopinhabers hat Sitz in Deutschland, Österreich, Belgien, Dänemark, Frankreich, Großbritannien, Italien, Irland, Luxemburg, Niederlande, Portugal, Schweden, Spanien, Ungarn oder Zypern (Stand März 2018)</li>
        <li>Amazon Seller Account</li>
        <li>Amazon Payments Konto</li>
        <li>Login mit Amazon ID und andere Kennungen erstellt<br>
@@ -71,6 +72,18 @@
 <a href="http://www.webiprog.de/loesungen/bezahlen-mit-amazon-fuer-zen-cart" target="_blank">http://www.webiprog.de/loesungen/bezahlen-mit-amazon-fuer-zen-cart</a><br/>
 Copyright Originalmodul 2014-2017:<br>
 <a href="http://www.webiprog.de" target="_blank">www.webiprog.de</a>
+<p>Version 2.2.0<br>
+2018-03-21<br>
+webchills (<a href="https://www.webchills.at" target="_blank">www.webchills.at</a>) 
+<ul>
+  <li>Korrekte Übernahme von Firmennamen in Lieferadressen</li>
+  <li>Einschränkungsmöglichkeit auf Zonen entfernt</li>
+  <li>Unnötige Funktionen entfernt</li>
+  <li>Anpassungen für PHP 7.1</li>
+  <li>Unterstützte Shop Länder erweitert (Stand Ende März 2018)<br>
+  </li>
+  <li>Anleitung aktualisiert</li>
+</ul>
 <p>Version 2.1.0<br>
   2018-01-16<br>
   webchills (<a href="https://www.webchills.at" target="_blank">www.webchills.at</a>) 
@@ -156,7 +169,7 @@ Sie haben einen Amazon Seller Account und Ihr Firmensitz ist Deutschland, Frankr
   <a href="https://pay.amazon.com/de/developer/documentation/lpwa/201956330" target="_blank">https://pay.amazon.com/de/developer/documentation/lpwa/201956330</a><br>
   <br>
   5)<br/>
-  Falls Sie bereits eine ältere Version dieses Moduls im Shop aktiv haben, deinstallieren Sie die alte Version vorher komplett!<br/><br/>
+  Falls Sie bereits eine ältere Version dieses Moduls im Shop aktiv haben, deinstallieren Sie die alte Version vorher komplett und entfernen Sie unter Module Zahlungsarten zunächst das Amazon Pay Modul bevor Sie die neue Version 2.2.0 hochladen!<br/><br/>
   <strong>Alles vorhanden und eingerichtet?<br>
   Dann in folgenden Schritten das Modul installieren:
   </strong></p>
@@ -209,10 +222,6 @@ In die Zen Cart Administration einloggen<br>
 True oder False<br/>
 Stellen Sie zunächst auf False, erst aktivieren wenn Sie alles eingerichtet haben
 <br/><br/>
-Zahlungszone<br/>
---kein--<br/>
-Empfohlen auf --kein-- zu lassen, außer Sie wollen diese Zahlungsart auf eine bestimmte im Shop korrekt angelegte Zone einschränken
-<br/><br/>
 Standard Bestellstatus<br/>
 Beispiel:<br/>
 Zahlung erhalten - in Arbeit [2]
@@ -240,92 +249,91 @@ Storniert [5]
 Sortierreihenfolge<br/>
 steuert die Reihenfolge der angebotenen Zahlungsmodule<br/>
 Niedrige Werte werden zuoberst angezeigt
-<br/><br/>
-Händlernummer<br/>
-Ihre Amazon Händler ID<br/>
-sieht z.B. so aus<br/>
-A5O7ABCD9ABC12
-<br/><br/>
-Client-ID<br/>
-sieht z.B. so aus<br/>
-amzn7.application-oa7-client.12a123456ab123456abcdefg
-<br/><br/>
-MWS-Zugriffsschlüssel-ID<br/>
-sieht z.B. so aus<br/>
-ABCDEFG1AB2BBYABCDEF
-<br/><br/>
-Geheimer Schlüssel<br/>
-sieht z.B. so aus<br/>
-Fvp+iN+ih/FBePqOOFZm0zVNT1iMJqLmlwBC2XhR
-<br/><br/>
-Zahlungsregion<br/>
-Euro Region<br/>
-außer Ihr Shop befindet sich in Großbritannien
-<br/><br/>
-Standardregion auswählen
-DE<br/>
-falls sich Ihr Shop in Deutschland befindet
-<br/><br/>
-Wann soll dem Kunden die Zahlung bei Amazon abgezogen werden?<br/>
-When the order is placed<br/>
-Diese Voreinstellung so lassen, andere Optionen sind mit diesem Modul nicht getestet worden
-<br/><br/>
-Live oder Sandbox<br/>
-sandbox<br/>
-Verwenden Sie zunächst unbedingt die Sandbox Umgebung, damit Sie in Ihrem Testshop Amazon Zahlungen ohne echte Transaktionen testen können, um sich mit der Funktionsweise vertraut zu machen
-<br/><br/>
-Debugging-Modus<br/>
-Log File nur zum Testen aktivieren, es werden dann Logs in den Ordner includes/modules/payment/frites/logs geschrieben. Dieser Ordner benötigt Schreibrechte (chmod777)
-<br>
-Falls in Ihrer includes/configure.php ein bestimmter genereller Ordner für Logfiles angegeben ist, dann wird dieser Ordner verwendet.
-<br/><br/>
-Größe des Kassen-Buttons<br/>
-small<br/>
-Einfach nach Aktivierung ausprobieren, welcher am besten zu Ihrem Shoplayout passt
-<br/><br/>
-Button-Stil<br/>
-Gold<br/>
-Einfach nach Aktivierung ausprobieren, welcher am besten zu Ihrem Shoplayout passt
-<br/><br/>
-Adressbuch-Breite<br/>
-700px<br/>
-Kann nur in Pixel nicht in Prozent sein!<br/>
-Einfach nach Aktivierung ausprobieren, welche Breite am besten zu Ihrem Shoplayout passt
-<br/><br/>
-Adressbuch-Höhe<br/>
-260px<br/>
-Kann nur in Pixel nicht in Prozent sein!<br/>
-Einfach nach Aktivierung ausprobieren, welche Höhe am besten zu Ihrem Shoplayout passt
-<br/><br/>
-Zahlungsart-Breite<br/>
-700px<br/>
-Kann nur in Pixel nicht in Prozent sein!<br/>
-Einfach nach Aktivierung ausprobieren, welche Breite am besten zu Ihrem Shoplayout passt
-<br/><br/>
-Zahlungsart-Höhe<br/>
-260px<br/>
-Kann nur in Pixel nicht in Prozent sein!<br/>
-Einfach nach Aktivierung ausprobieren, welche Höhe am besten zu Ihrem Shoplayout passt
-<br/><br/>
-Telefonnummer erforderlich?<br/>
-True<br/>
-Falls Sie in Ihrem Shop die Telefonnummer bei der Registrierung als Pflichtfeld vorsehen, stellen Sie hier auf True.<br/>
-Wenn ein Kunde den Checkout mit Amazon startet, wird ein Kundenkonto angelegt, das zunächst keine Telefonnummer enthält.<br/>
-Wählt der Kunde dann doch eine andere Zahlungsart, würde er ohne Telefonnummer zur Kasse gehen. Ist diese Einstellung aktiv, dann wird das verhindert, da der Kunde dann zunächst aufgefordert wird, seine Telefonnummer zu ergänzen.<br/>
-Wenn die Telefonnummer in Ihrem Shop kein Pflichtfeld ist, stellen Sie hier auf False. 
 <br>
 <br>
-Aktivieren Sie nun das Modul erst im Sandbox Modus, legen Sie etwas in den Warenkorb und clicken Sie dort auf den Amazon Pay Button.<br>
-Loggen Sie sich mit Ihrem Amazon Sandbox User ein und machen Sie eine Testbestellung.<br>
-<br>
-Sehen Sie sich danach die Bestellung im Admin mit Bearbeiten an. <br>
-Es wird zunächst eine Bestellung angelegt, deren Status dann anhand der Rückmeldungen von Amazon mehrfach aktualisiert wird. Die entsprechenden Einträge sehen Sie in der Kommentarhistory.<br>
-<br>
-Normalerweise sind Zahlungen via Amazon erfolgreich. Es kann aber vorkommen, dass Kunden in Ihrem Amazon Account keine gültige Zahlungsart eingestellt haben oder die Zahlung von Amazon aus anderen Gründen abgelehnt wird. <br>
-In diesem Fall werden die Daten der Bestellung nicht vollständig aktualisiert, da Adresse und Telefonnummer erst bei erfolgreicher Zahlung rückgemeldet werden.<br>
-In der 
-Kommentarhistory sehen Sie, dass die Zahlung abgelehnt wurde.<br>
-Achten Sie auf abgelehnte Zahlungen und stellen Sie Ihre Bestellstati im Modul entsprechend ein, so dass Sie bereits am Bestellstatus erkennen können, dass diese Bestellung nicht bezahlt wurde.</p>
+Die folgenden Werte finden Sie in Ihrem Amazon Pay Account im Menü
+Integration &gt; MWS Access Key:</p>
+<p><img src="images/anmeldedaten.jpg" width="980" height="384"  alt=""/><br/>
+  <br/>
+  Händler-ID<br/>
+  Ihre Amazon Händler ID<br/>
+  sieht z.B. so aus<br/>
+  A5O7ABCD9ABC12
+  <br/><br/>
+  Client-ID<br/>
+  sieht z.B. so aus<br/>
+  amzn7.application-oa7-client.12a123456ab123456abcdefg
+  <br/><br/>
+  MWS Access Key-ID<br/>
+  sieht z.B. so aus<br/>
+  ABCDEFG1AB2BBYABCDEF
+  <br/><br/>
+  MWS Secret Access Key (nicht verwechseln mit dem Client Secret, dieses wird NICHT benötigt)<br/>
+  sieht z.B. so aus<br/>
+  Fvp+iN+ih/FBePqOOFZm0zVNT1iMJqLmlwBC2XhR
+  <br/><br/>
+  Zahlungsregion<br/>
+  Euro Region<br/>
+  außer Ihr Shop befindet sich in Großbritannien
+  <br/><br/>
+  Standarprache auswählen<br/>
+  auf DE lassen<br/><br/>
+  Live oder Sandbox<br/>
+  sandbox<br/>
+  Verwenden Sie zunächst unbedingt die Sandbox Umgebung, damit Sie in Ihrem Testshop Amazon Zahlungen ohne echte Transaktionen testen können, um sich mit der Funktionsweise vertraut zu machen
+  <br/><br/>
+  Debugging-Modus<br/>
+  Log File nur zum Testen aktivieren, es werden dann Logs in den Ordner includes/modules/payment/frites/logs geschrieben. Dieser Ordner benötigt Schreibrechte (chmod777)
+  <br>
+  Falls in Ihrer includes/configure.php ein bestimmter genereller Ordner für Logfiles angegeben ist, dann wird dieser Ordner verwendet.
+  <br/><br/>
+  Größe des Kassen-Buttons<br/>
+  small<br/>
+  Einfach nach Aktivierung ausprobieren, welcher am besten zu Ihrem Shoplayout passt
+  <br/><br/>
+  Button-Stil<br/>
+  Gold<br/>
+  Einfach nach Aktivierung ausprobieren, welcher am besten zu Ihrem Shoplayout passt
+  <br/><br/>
+  Adressbuch-Breite<br/>
+  700px<br/>
+  Kann nur in Pixel nicht in Prozent sein!<br/>
+  Einfach nach Aktivierung ausprobieren, welche Breite am besten zu Ihrem Shoplayout passt
+  <br/><br/>
+  Adressbuch-Höhe<br/>
+  260px<br/>
+  Kann nur in Pixel nicht in Prozent sein!<br/>
+  Einfach nach Aktivierung ausprobieren, welche Höhe am besten zu Ihrem Shoplayout passt
+  <br/><br/>
+  Zahlungsart-Breite<br/>
+  700px<br/>
+  Kann nur in Pixel nicht in Prozent sein!<br/>
+  Einfach nach Aktivierung ausprobieren, welche Breite am besten zu Ihrem Shoplayout passt
+  <br/><br/>
+  Zahlungsart-Höhe<br/>
+  260px<br/>
+  Kann nur in Pixel nicht in Prozent sein!<br/>
+  Einfach nach Aktivierung ausprobieren, welche Höhe am besten zu Ihrem Shoplayout passt
+  <br/><br/>
+  Telefonnummer erforderlich?<br/>
+  True<br/>
+  Falls Sie in Ihrem Shop die Telefonnummer bei der Registrierung als Pflichtfeld vorsehen, stellen Sie hier auf True.<br/>
+  Wenn ein Kunde den Checkout mit Amazon startet, wird ein Kundenkonto angelegt, das zunächst keine Telefonnummer enthält.<br/>
+  Wählt der Kunde dann doch eine andere Zahlungsart, würde er ohne Telefonnummer zur Kasse gehen. Ist diese Einstellung aktiv, dann wird das verhindert, da der Kunde dann zunächst aufgefordert wird, seine Telefonnummer zu ergänzen.<br/>
+  Wenn die Telefonnummer in Ihrem Shop kein Pflichtfeld ist, stellen Sie hier auf False. 
+  <br>
+  <br>
+  Aktivieren Sie nun das Modul erst im Sandbox Modus, legen Sie etwas in den Warenkorb und clicken Sie dort auf den Amazon Pay Button.<br>
+  Loggen Sie sich mit Ihrem Amazon Sandbox User ein und machen Sie eine Testbestellung.<br>
+  <br>
+  Sehen Sie sich danach die Bestellung im Admin mit Bearbeiten an. <br>
+  Es wird zunächst eine Bestellung angelegt, deren Status dann anhand der Rückmeldungen von Amazon mehrfach aktualisiert wird. Die entsprechenden Einträge sehen Sie in der Kommentarhistory.<br>
+  <br>
+  Normalerweise sind Zahlungen via Amazon erfolgreich. Es kann aber vorkommen, dass Kunden in Ihrem Amazon Account keine gültige Zahlungsart eingestellt haben oder die Zahlung von Amazon aus anderen Gründen abgelehnt wird. <br>
+  In diesem Fall werden die Daten der Bestellung nicht vollständig aktualisiert, da Adresse und Telefonnummer erst bei erfolgreicher Zahlung rückgemeldet werden.<br>
+  In der 
+  Kommentarhistory sehen Sie, dass die Zahlung abgelehnt wurde.<br>
+  Achten Sie auf abgelehnte Zahlungen und stellen Sie Ihre Bestellstati im Modul entsprechend ein, so dass Sie bereits am Bestellstatus erkennen können, dass diese Bestellung nicht bezahlt wurde.</p>
 <p>Wenn Kunden, die es im Shop noch nicht gibt, mit Amazon einloggen, wird automatisch ein Kundenkonto erstellt und im Willkommensmail bekommt der Kunde ein zufällig generiertes Passwort zugesandt. Dieses Kundenkonto enthält zunächst weder Telefonnummer noch Strasse, diese Informationen werden erst nach erfolgreichem Amazon Checkout im Kundenkonto aktualisiert. Ändern solche Kunden im Checkout dann die Zahlungsart und nehmen doch nicht Amazon wird verhindert, dass sie mit solch unvollständigen Kundendaten zur Kasse gehen, sie werden in so einem Fall zunächst auf die Mein Konto Seite geleitet, um ihre Adressdaten zu aktualisieren. Die Texte, die für die Hinweise dazu erscheinen, können in includes/languages/german/extra_definitions/frites_errors.php an eigene Wünsche angepasst werden.<br>
   <br>
   Sollte es später einmal nötig sein, eine Amazon Zahlung zurückzuerstatten, ist das ähnlich wie bei PayPal Express direkt über die Shopadministration möglich. Beim Bearbeiten der Bestellung sind OrderReferenceId, AuthorizationId und CaptureId ersichtlich. Clicken Sie darunter auf den Button &quot;Neu laden&quot; und danach auf &quot;Rückzahlen&quot;

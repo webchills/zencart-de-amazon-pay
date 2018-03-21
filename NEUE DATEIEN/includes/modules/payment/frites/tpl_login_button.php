@@ -1,17 +1,14 @@
 <?php
 /**
- * AMAZON FRITES Login button display template
- *
- * @package paymentMethod
+ * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @Author: Webiprog  Mon Mar 21 18:36:04 2016 +0200 $ 
+ * @version $Id: tpl_login_button.php 2018-03-21 10:29:16Z webchills $
  */
 
-
-
-include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php');
+include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php';
 
 $only_login = false;
 
@@ -65,13 +62,13 @@ if ($frites_enabled) {
 
 	// TODO FIX countries and currencies
 	if ((int)MODULE_PAYMENT_FRITES_ZONE > 0 && isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
-		$custCountryCheck = (isset($order)) ? $order->billing['country']['id'] : $_SESSION['customer_country_id'];
-		$custZoneCheck = (isset($order)) ? $order->billing['zone_id'] : $_SESSION['customer_zone_id'];
+		$custCountryCheck = isset($order) ? $order->billing['country']['id'] : $_SESSION['customer_country_id'];
+		$custZoneCheck = isset($order) ? $order->billing['zone_id'] : $_SESSION['customer_zone_id'];
 		$check_flag = false;
-		$sql = "SELECT zone_country_id, zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . "
+		$sql = 'SELECT zone_country_id, zone_id FROM ' . TABLE_ZONES_TO_GEO_ZONES . '
 				WHERE geo_zone_id = :zoneId
 				/*AND zone_country_id = :countryId*/
-				ORDER BY zone_id";
+				ORDER BY zone_id';
 		$sql = $db->bindVars($sql, ':zoneId', (int)MODULE_PAYMENT_FRITES_ZONE, 'integer');
 		//$sql = $db->bindVars($sql, ':countryId', $custCountryCheck, 'integer');
 		$result = $db->Execute($sql);
@@ -161,12 +158,12 @@ if ($frites_enabled) {
 <?php } else { ?>
 	<?php if (isset($_SESSION['frites_login_redirect'])) {unset($_SESSION['frites_login_redirect']);} ?>
 <?php 
-	$image_src = "https://images-na.ssl-images-amazon.com/images/G/01/EP/offAmazonPayments/".
+	$image_src = 'https://images-na.ssl-images-amazon.com/images/G/01/EP/offAmazonPayments/' .
 					$frites_lang['link'].
-					"/".(MODULE_PAYMENT_FRITES_HANDLER == 'production'?'live':'sandbox')."/prod/image/lwa/".
+        '/' .(MODULE_PAYMENT_FRITES_HANDLER == 'production'?'live':'sandbox'). '/prod/image/lwa/' .
 					strtolower(MODULE_PAYMENT_FRITES_BUTTON_STYLE).
-					"/".strtolower(MODULE_PAYMENT_FRITES_BUTTON_SIZE).
-					"/PwA.png"; 
+        '/' .strtolower(MODULE_PAYMENT_FRITES_BUTTON_SIZE).
+        '/PwA.png';
 ?>
 <div align="right" class="buttonRow"><div id="AmazonPayButton">
 	<img src="<?php echo $image_src ?>" style="cursor:pointer;" id="PayWithAmazon" onclick="location='<?php echo $links['checkout_frites_shipping'] ?>'" style="cursor:pointer;">

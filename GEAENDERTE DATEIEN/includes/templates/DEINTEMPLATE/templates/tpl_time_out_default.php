@@ -3,10 +3,10 @@
  * Page Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_time_out_default.php for Amazon Pay 2017-11-15 19:49:16Z webchills $
+ * @version $Id: tpl_time_out_default.php for Amazon Pay 2018-03-21 09:49:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="timeoutDefault">
@@ -42,7 +42,7 @@
 <?php // ** BEGIN AMAZON FRITES LOGIN ** ?>
 	<?php
 	if (defined('MODULE_PAYMENT_FRITES_STATUS') && MODULE_PAYMENT_FRITES_STATUS == 'True') {
-		include(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_login_button.php');
+		include DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_login_button.php';
 	}
 	?>
 	<?php // ** END AMAZON FRITES LOGIN ** ?>

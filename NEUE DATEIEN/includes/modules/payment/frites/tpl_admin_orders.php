@@ -1,15 +1,14 @@
 <?php
 /**
- * AMAZON FRITES backend orders template
- *
- * @package paymentMethod
+ * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @Author: Webiprog  Mon Mar 21 18:36:04 2016 +0200 $
+ * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
+ * @version $Id: tpl_admin_orders.php 2018-03-21 10:29:16Z webchills $
  */
 
-include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php');
+include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php';
 
 $links = fritesLinks();
 
@@ -22,8 +21,8 @@ if ($frites_enabled && isset($_SESSION['admin_id']) && (int)$_SESSION['admin_id'
 	}
 	
 	if ($order->info['payment_module_code'] == 'frites') {
-		$order_frites = $db->Execute("select frites_order_reference_id, frites_order_authorization_id, frites_order_capture_id, frites_order_refund_id
-									from " . TABLE_ORDERS . "
+		$order_frites = $db->Execute('select frites_order_reference_id, frites_order_authorization_id, frites_order_capture_id, frites_order_refund_id
+									from ' . TABLE_ORDERS . "
 									where orders_id = '" . (int)$_GET['oID'] . "'");
 
 		$order->info['frites_order_reference_id'] = $order_frites->fields['frites_order_reference_id'];
