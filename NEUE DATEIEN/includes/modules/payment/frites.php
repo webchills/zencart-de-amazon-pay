@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: frites.php 2018-03-21 16:29:16Z webchills $
+ * @version $Id: frites.php 2018-03-23 15:29:16Z webchills $
  */
 
 /**
@@ -179,9 +179,7 @@ class frites {
 
 ?>
 		<div class="frites-payment">
-			<h2><?php echo MODULE_PAYMENT_FRITES_TEXT_TITLE ?> <?php /*if ($frites_logged['status']) { ?><a href="javascript:void(0)" id="Logout" style="display:inline-block;"><h3>Logout</h3></a><?php }*/ ?></h2>
-
-
+		
 
 			<input id="fritesOrderReferenceId" type="hidden" name="frites[OrderReferenceId]" value="<?php echo isset($_SESSION['frites']['OrderReferenceId'])?$_SESSION['frites']['OrderReferenceId']:'' ?>" />
 
