@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_confirmation_default.php 2018-03-21 09:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_confirmation_default.php 2018-04-04 17:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
@@ -96,7 +96,7 @@
 
 <h2 id="checkoutConfirmDefaultHeadingComments"><?php echo HEADING_ORDER_COMMENTS; ?></h2>
 <div class="buttonRow forward"><?php echo  '<a href="' . $links['checkout_frites_payment'] . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
-<div><?php echo (empty($order->info['comments']) ? NO_COMMENTS_TEXT : nl2br(zen_output_string_protected($order->info['comments'])) . zen_draw_hidden_field('comments', $order->info['comments'])); ?></div>
+<div><?php echo (empty($order->info['comments']) ? NO_COMMENTS_TEXT : nl2br(zen_clean_html($order->info['comments'])) . zen_draw_hidden_field('comments', zen_clean_html($order->info['comments']))); ?></div>
 <br class="clearBoth" />
 
 <hr />

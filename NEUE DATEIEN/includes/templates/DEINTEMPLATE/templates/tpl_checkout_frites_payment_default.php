@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_payment_default.php 2018-03-23 15:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_payment_default.php 2018-04-04 09:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutPayment">

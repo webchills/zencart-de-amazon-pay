@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Amazon Pay for Zen Cart German
+ * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php for COWOA 2018-01-16 18:29:16Z webchills $
+ * @version $Id: header_php.php for COWOA 2018-04-04 18:29:16Z webchills $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_LOGIN');
@@ -14,14 +14,12 @@ $zco_notifier->notify('NOTIFY_HEADER_START_LOGIN');
 if ($session_started == false) {
     zen_redirect(zen_href_link(FILENAME_COOKIE_USAGE));
 }
-include_once((IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php');
+include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php';
 
 $links = fritesLinks();
 
 $frites_logged = fritesLogin();
-//echo '<pre>';print_r($frites_logged);echo '</pre>';die();
 
-//echo '<pre>';print_r(md5($frites_logged['user_profile']['user_id']));echo '</pre>';die();
 
 
 $loginAuthorized = false;
@@ -51,12 +49,12 @@ if (!empty($frites_logged['status']) && isset($frites_logged['user_profile']['em
 
         // set the amazon user_profile id If not logged in via Amazon and update name
         $sql_customer_id = intval($check_customer->fields['customers_id']);
-        $sql = "UPDATE " . TABLE_CUSTOMERS . "
+        $sql = 'UPDATE ' . TABLE_CUSTOMERS . '
 					SET 
 					customers_frites_userid = :fritesUserid,
 					customers_firstname = :fritesFirstName, 
 					customers_lastname = :fritesLastName
-					WHERE customers_id = :custID";
+					WHERE customers_id = :custID';
         $sql = $db->bindVars($sql, ':fritesUserid', $frites_md, 'string');
         $sql = $db->bindVars($sql, ':fritesFirstName', (!empty($customer_name[0]) ? $customer_name[0] : ''), 'string');
         $sql = $db->bindVars($sql, ':fritesLastName', (!empty($customer_name[1]) ? $customer_name[1] : ''), 'string');
@@ -93,7 +91,7 @@ if (!empty($frites_logged['status']) && isset($frites_logged['user_profile']['em
             $sql_data_array = array();
 
             // set the customer information in the array for the table insertion
-            $sql_data_array = array('customers_firstname' => (isset($customer_name[0]) ? trim($customer_name[0]) : ''), 'customers_lastname' => (isset($customer_name[1]) ? trim($customer_name[1]) : ''), 'customers_email_address' => $frites_logged['user_profile']['email'], 'customers_email_format' => (ACCOUNT_EMAIL_PREFERENCE == '1' ? 'HTML' : 'TEXT'), 'customers_telephone' => '', 'customers_fax' => '', 'customers_gender' => 'm', 'customers_newsletter' => '0', 'customers_password' => zen_encrypt_password($password), 'customers_frites_userid' => $frites_md);
+            $sql_data_array = array('customers_firstname' => isset($customer_name[0]) ? trim($customer_name[0]) : '', 'customers_lastname' => isset($customer_name[1]) ? trim($customer_name[1]) : '', 'customers_email_address' => $frites_logged['user_profile']['email'], 'customers_email_format' => ACCOUNT_EMAIL_PREFERENCE == '1' ? 'HTML' : 'TEXT', 'customers_telephone' => '', 'customers_fax' => '', 'customers_gender' => 'm', 'customers_newsletter' => '0', 'customers_password' => zen_encrypt_password($password), 'customers_frites_userid' => $frites_md);
 
             // insert the data
             $result = zen_db_perform(TABLE_CUSTOMERS, $sql_data_array);
@@ -108,16 +106,9 @@ if (!empty($frites_logged['status']) && isset($frites_logged['user_profile']['em
 			$country_id = frites_get_default_country_id();
             $state_id = 0;
 
-            /*if (MODULE_PAYMENT_FRITES_REGION == 'UK') {
-                $country_id = 222;
-            }
-
-            if (MODULE_PAYMENT_FRITES_REGION == 'DE') {
-                $country_id = 81;
-            }*/
-
+            
             // set the customer address information in the array for the table insertion
-            $sql_data_array = array('customers_id' => $customer_id, 'entry_gender' => 'm', 'entry_firstname' => (isset($customer_name[0]) ? trim($customer_name[0]) : ''), 'entry_lastname' => (isset($customer_name[1]) ? trim($customer_name[1]) : ''), 'entry_street_address' => '', 'entry_suburb' => '', 'entry_city' => '', 'entry_zone_id' => $state_id, 'entry_postcode' => $frites_logged['user_profile']['postal_code'], 'entry_country_id' => $country_id);
+            $sql_data_array = array('customers_id' => $customer_id, 'entry_gender' => 'm', 'entry_firstname' => isset($customer_name[0]) ? trim($customer_name[0]) : '', 'entry_lastname' => isset($customer_name[1]) ? trim($customer_name[1]) : '', 'entry_street_address' => '', 'entry_suburb' => '', 'entry_city' => '', 'entry_zone_id' => $state_id, 'entry_postcode' => $frites_logged['user_profile']['postal_code'], 'entry_country_id' => $country_id);
 
             // insert the data
             zen_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
@@ -126,17 +117,17 @@ if (!empty($frites_logged['status']) && isset($frites_logged['user_profile']['em
             $address_id = $db->Insert_ID();
 
             // set the address id lookup for the customer
-            $sql = "UPDATE " . TABLE_CUSTOMERS . "
+            $sql = 'UPDATE ' . TABLE_CUSTOMERS . '
 					SET customers_default_address_id = :addrID
-					WHERE customers_id = :custID";
+					WHERE customers_id = :custID';
             $sql = $db->bindVars($sql, ':addrID', $address_id, 'integer');
             $sql = $db->bindVars($sql, ':custID', $customer_id, 'integer');
             $db->Execute($sql);
 
             // insert the new customer_id into the customers info table for consistency
-            $sql = "INSERT INTO " . TABLE_CUSTOMERS_INFO . "
+            $sql = 'INSERT INTO ' . TABLE_CUSTOMERS_INFO . '
 						   (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created, customers_info_date_of_last_logon)
-					VALUES (:custID, 1, now(), now())";
+					VALUES (:custID, 1, now(), now())';
             $sql = $db->bindVars($sql, ':custID', $customer_id, 'integer');
             $db->Execute($sql);
 
@@ -152,7 +143,7 @@ if (!empty($frites_logged['status']) && isset($frites_logged['user_profile']['em
                     $template_dir_select = '';
                 }
 
-                require($language_page_directory . $template_dir_select . '/create_account.php');
+                require $language_page_directory . $template_dir_select . '/create_account.php';
 
                 // set the mail text
                 $email_text = sprintf(EMAIL_GREET_NONE, $frites_logged['user_profile']['name']) . EMAIL_WELCOME . "\n\n" . EMAIL_TEXT;
@@ -211,10 +202,10 @@ if (!empty($frites_logged['status']) && isset($frites_logged['user_profile']['em
             zen_session_recreate();
         }
 
-        $check_country_query = "SELECT entry_country_id, entry_zone_id
-							  FROM " . TABLE_ADDRESS_BOOK . "
+        $check_country_query = 'SELECT entry_country_id, entry_zone_id
+							  FROM ' . TABLE_ADDRESS_BOOK . '
 							  WHERE customers_id = :customersID
-							  AND address_book_id = :addressBookID";
+							  AND address_book_id = :addressBookID';
 
         $check_country_query = $db->bindVars($check_country_query, ':customersID', $check_customer->fields['customers_id'], 'integer');
         $check_country_query = $db->bindVars($check_country_query, ':addressBookID', $check_customer->fields['customers_default_address_id'], 'integer');
@@ -229,20 +220,20 @@ if (!empty($frites_logged['status']) && isset($frites_logged['user_profile']['em
         $_SESSION['customer_zone_id'] = $check_country->fields['entry_zone_id'];
 
         // enforce db integrity: make sure related record exists
-        $sql = "SELECT customers_info_date_of_last_logon FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_id = :customersID";
+        $sql = 'SELECT customers_info_date_of_last_logon FROM ' . TABLE_CUSTOMERS_INFO . ' WHERE customers_info_id = :customersID';
         $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
         $result = $db->Execute($sql);
         if ($result->RecordCount() == 0) {
-            $sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id) values (:customersID)";
+            $sql = 'insert into ' . TABLE_CUSTOMERS_INFO . ' (customers_info_id) values (:customersID)';
             $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
             $db->Execute($sql);
         }
 
         // update login count
-        $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
+        $sql = 'UPDATE ' . TABLE_CUSTOMERS_INFO . '
 			  SET customers_info_date_of_last_logon = now(),
 				  customers_info_number_of_logons = IF(customers_info_number_of_logons, customers_info_number_of_logons+1, 1)
-			  WHERE customers_info_id = :customersID";
+			  WHERE customers_info_id = :customersID';
 
         $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
         $db->Execute($sql);
@@ -287,7 +278,7 @@ if (!empty($frites_logged['status']) && isset($frites_logged['user_profile']['em
 
 } else {
 
-    //fixed by oppo webiprog.com  (oleg@webiprog.com)
+   
     //redirect to original login
     // Amazon did not accept login
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -300,13 +291,7 @@ if (isset($_GET['only_login']) && $_GET['only_login']) {
 } else {
 	zen_redirect($links['checkout_frites_shipping']);
 }
-/*echo $loginAuthorized;
-echo '<pre>';print_r($_SESSION);echo '</pre>';
-echo '<pre>';print_r($frites_logged);echo '</pre>';
-echo '<pre>';print_r($_SERVER);echo '</pre>';
-die();
 
-zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));*/
 
 
 // This should be last line of the script:

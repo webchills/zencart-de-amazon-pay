@@ -30,9 +30,18 @@ Voraussetzungen:
 
 Copyright, Lizenz, Changelog
 
+Version 2.2.1
+2018-04-04
+webchills
+
+* Unnötige Anzeige des Modulnamens auf der checkout_frites_confirmation Seite entfernt
+* Eingabe von Aktionskupons sichtbar geschaltet
+* Fix für abgebrochene Bestellungen aufgrund von Zeilenumbrüchen in Bestellkommentaren
+* Anleitung aktualisiert
+
 Version 2.2.0
 2018-03-21
-webchills (www.webchills.at) 
+webchills
 
 * Korrekte Übernahme von Firmennamen in Lieferadressen
 * Einschränkungsmöglichkeit auf Zonen entfernt
@@ -44,7 +53,7 @@ webchills (www.webchills.at)
 
 Version 2.1.0
 2018-01-16
-webchills (www.webchills.at)
+webchills
 
 * Korrekte Integration der Bestätigung von AGB und Widerruf
 * Bugfix für Checkout Button bei versandkostenfreiem Versand

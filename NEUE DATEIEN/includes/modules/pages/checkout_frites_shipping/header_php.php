@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 2018-03-21 10:29:16Z webchills $
+ * @version $Id: header_php.php 2018-04-04 17:29:16Z webchills $
  */
  
 // This should be first line of the script:
@@ -250,7 +250,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['
 
 
 	if (zen_not_null($_POST['comments'])) {
-		$_SESSION['comments'] = zen_db_prepare_input($_POST['comments']);
+		$_SESSION['comments'] = zen_db_prepare_input (zen_clean_html($_POST['comments']));
 	}
 
 	$comments = $_SESSION['comments'];
