@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php for Amazon Pay 2018-03-21 09:05:16Z webchills $
+ * @version $Id: header_php.php for Amazon Pay 2018-07-31 17:05:16Z webchills $
  */
 
 // This should be first line of the script:
@@ -65,13 +65,14 @@ $flagHasCartContents = ($_SESSION['cart']->count_contents() > 0);
 $cartShowTotal = $currencies->format($_SESSION['cart']->show_total());
 
 $flagAnyOutOfStock = false;
-$flagStockCheck = '';
+
 $products = $_SESSION['cart']->get_products();
 for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+  $flagStockCheck = '';
   if (($i/2) == floor($i/2)) {
-    $rowClass= 'rowEven';
+    $rowClass="rowEven";
   } else {
-    $rowClass= 'rowOdd';
+    $rowClass="rowOdd";
   }
   switch (true) {
     case (SHOW_SHOPPING_CART_DELETE == 1):

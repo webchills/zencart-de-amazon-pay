@@ -30,6 +30,13 @@ Voraussetzungen:
 
 Copyright, Lizenz, Changelog
 
+Version 2.2.2
+2018-07-31
+webchills
+
+* Anpassungen für 1.5.5f
+* Bei transaction timed out Rückmeldung von Amazon wird keine Bestellung mehr ausgelöst
+
 Version 2.2.1
 2018-04-04
 webchills
