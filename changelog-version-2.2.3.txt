@@ -1,0 +1,24 @@
+Changelog Version 2.2.3 gegenüber Version 2.2.2
+
+2019-05-25 webchills
+
+- Infoseite zur Verwendung in Firefox integriert
+- Prominentere Plazierung auf der Loginseite mit Infotext
+- Durchgehende Übergabe von zwei Nachkommastellen beim Bestellwert zur Vorbereitung auf SCA Compliance
+
+Änderungen in 
+includes/modules/payment/frites.php
+Die mitgelieferten geänderten Dateien wurden auf den Stand von 1.5.5f gebracht
+
+
+Um von 2.2.2 auf 2.2.3 zu aktualisieren:
+
+Module > Zahlungsarten > mit Amazon bezahlen
+Einstellungen notieren
+Dann Modul entfernen
+
+Die in 2.2.2 geänderte Datei includes/modules/payment/frites.php hochladen
+
+Modul neu initialisieren mit den zuvor notierten Einstellungen
+
+Überprüfen ob alle geänderten Dateien wirklich auf dem Stand von 1.5.5f sind

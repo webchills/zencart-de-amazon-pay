@@ -3,6 +3,8 @@ Amazon Pay - Login und Checkout mit Amazon für Zen Cart 1.5.5 deutsch
 
 Dieses Modul ermöglicht die Zahlungsart Amazon Pay in Ihrem Zen Cart Shop.
 
+Dieses Modul ist noch nicht für die ab 14. September 2019 zwingende Strong Customer Authentication (SCA) ausgelegt. Eine neue Version, die das unterstützt, wird rechtzeitig vor Einführung der SCA erscheinen.
+
 Dieses Modul setzt die Lieferung physischer Waren mit einer Versandadresse voraus. Für einen Downloadshop digitaler Artikel ist es NICHT geeignet! Es wird deaktiviert, wenn virtuelle Artikel im Warenkorb sind.
 
 Kunden können direkt mit ihrem Amazon Account zahlen und alle dort hinterlegten Zahlungsarten zu verwenden.
@@ -29,6 +31,14 @@ Voraussetzungen:
 * (siehe beiliegendes pdf Wie-bekomme-und-nutze-ich-meine-Login-mit-AmazonClient-ID.pdf)
 
 Copyright, Lizenz, Changelog
+
+Version 2.2.3
+2019-05-25
+webchills
+
+* Infoseite zur möglichen Blockade des Amazon Widgets in neuen Firefox Versionen integriert
+* Prominentere Plazierung des Amazon Buttons mit Infotext auf der Loginseite
+* Durchgehende Übergabe von 2 Nachkommatellen bei der Bestellsumme zur Vorberitung auf SCA Compliance
 
 Version 2.2.2
 2018-07-31

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Login und Bezahlen via Amazon (Amazon Pay) 2.2.2 für Zen Cart 1.5.5 deutsch</title>
+<title>Login und Bezahlen via Amazon (Amazon Pay) 2.2.3 für Zen Cart 1.5.5 deutsch</title>
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="content-language" content="de">
@@ -12,7 +12,7 @@
 <body>
 <div id="wrapper">
 <div id="header">
-<h1>Login und Bezahlen via Amazon (Amazon Pay) 2.2.2 für Zen Cart 1.5.5 deutsch</h1>
+<h1>Login und Bezahlen via Amazon (Amazon Pay) 2.2.3 für Zen Cart 1.5.5 deutsch</h1>
 </div>
 
 <div id="slidetabsmenu" style="display: none;">
@@ -41,6 +41,8 @@
    <br>
    <strong>Dieses Modul setzt die Lieferung physischer Waren mit einer Versandadresse voraus. Für einen  Downloadshop digitaler Artikel ist es NICHT geeignet! Es wird deaktiviert, wenn virtuelle Artikel im Warenkorb sind.</strong><br>
    <br/>
+   <strong>Dieses Modul ist noch nicht für die ab 14. September 2019 zwingende Strong Customer Authentication (SCA) ausgelegt. Eine neue Version, die das unterstützt, wird rechtzeitig vor Einführung der SCA erscheinen.</strong><br>
+   <br>
    Kunden können direkt mit ihrem Amazon Account zahlen und alle dort hinterlegten Zahlungsarten zu verwenden.<br/>
    Wählt der Kunde Bezahlen via Amazon kann er sich mit seinem Amazon Konto (Amazon Emailadresse und Amazon Passwort) einloggen, im Shop wird dann ein enstprechendes Kundenkonto automatisch angelegt, falls die Emailadresse noch nicht vorhanden ist.<br/>
    Sollte die Emailadresse bereits vorhanden sein, wird das bestehende Kundenkonto verknüpft.<br>
@@ -72,9 +74,17 @@
 <a href="http://www.webiprog.de/loesungen/bezahlen-mit-amazon-fuer-zen-cart" target="_blank">http://www.webiprog.de/loesungen/bezahlen-mit-amazon-fuer-zen-cart</a><br/>
 Copyright Originalmodul 2014-2017:<br>
 <a href="http://www.webiprog.de" target="_blank">www.webiprog.de</a>
-<p>Version 2.2.2<br>
-2018-07-31<br>
+<p>Version 2.2.3<br>
+2019-05-25<br>
 webchills
+<ul>
+  <li>Infoseite zur möglichen Blockade des Amazon Widgets in neuen Firefox Versionen integriert</li>
+  <li>Prominentere Plazierung des Amazon Buttons mit Infotext auf der Loginseite</li>
+  <li>Durchgehende Übergabe von 2 Nachkommatellen bei der Bestellsumme zur Vorberitung auf SCA Compliance</li>
+</ul>
+<p>Version 2.2.2<br>
+  2018-07-31<br>
+  webchills
 <ul>
   <li>Anpassungen für 1.5.5f deutsch</li>
   <li>Bei Amazon Rückmeldung transaction timed out wird keine Bestellung mehr ausgelöst</li>
@@ -338,6 +348,8 @@ Integration &gt; MWS Access Key:</p>
   Wenn ein Kunde den Checkout mit Amazon startet, wird ein Kundenkonto angelegt, das zunächst keine Telefonnummer enthält.<br/>
   Wählt der Kunde dann doch eine andere Zahlungsart, würde er ohne Telefonnummer zur Kasse gehen. Ist diese Einstellung aktiv, dann wird das verhindert, da der Kunde dann zunächst aufgefordert wird, seine Telefonnummer zu ergänzen.<br/>
   Wenn die Telefonnummer in Ihrem Shop kein Pflichtfeld ist, stellen Sie hier auf False. 
+  <br>
+  Stellen Sie hier auch auf False, falls Sie im Shop auch PayPal Express mit Express Button verwenden. Sonst werden Kunden im PayPal Express Checkout gezwungen erst ihre Telefonnummer zu hinterlegen, was den Express Checkout unnötig verlängert. Außer natürlich die Telefonnummer ist für Sie ein absolutes Muss.
   <br>
   <br>
   Aktivieren Sie nun das Modul erst im Sandbox Modus, legen Sie etwas in den Warenkorb und clicken Sie dort auf den Amazon Pay Button.<br>

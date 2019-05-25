@@ -2,10 +2,10 @@
 /**
  * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_login_button.php 2018-03-21 10:29:16Z webchills $
+ * @version $Id: tpl_login_button.php 2019-04-16 16:29:16Z webchills $
  */
 
 include_once (IS_ADMIN_FLAG === true ? DIR_FS_CATALOG_MODULES : DIR_WS_MODULES) . 'payment/frites/frites_functions.php';
@@ -28,39 +28,11 @@ if ($frites_enabled) {
 		}
 
 		if (isset($_COOKIE['frites_Login_state_cache'])) {
-			//setcookie('frites_Login_state_cache', '', time()-36000, '/', $_SERVER['HTTP_HOST']);
 			unset($_COOKIE['frites_Login_state_cache']);
 		}
-	}
+	}	
 
-	// check if logged-in customer's address is in an acceptable zone
-	/*if ((int)MODULE_PAYMENT_FRITES_ZONE > 0 && isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
-		$custCountryCheck = (isset($order)) ? $order->billing['country']['id'] : $_SESSION['customer_country_id'];
-		$custZoneCheck = (isset($order)) ? $order->billing['zone_id'] : $_SESSION['customer_zone_id'];
-		$check_flag = false;
-		$sql = "SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . "
-				WHERE geo_zone_id = :zoneId
-				AND zone_country_id = :countryId
-				ORDER BY zone_id";
-		$sql = $db->bindVars($sql, ':zoneId', (int)MODULE_PAYMENT_FRITES_ZONE, 'integer');
-		$sql = $db->bindVars($sql, ':countryId', $custCountryCheck, 'integer');
-		$result = $db->Execute($sql);
-
-		while (!$result->EOF) {
-			if ($result->fields['zone_id'] < 1 || $result->fields['zone_id'] == $custZoneCheck) {
-				$check_flag = true;
-				break;
-			}
-
-			$result->MoveNext();
-		}
-
-		if (!$check_flag) {
-			$frites_enabled = false;
-		}
-	}*/
-
-	// TODO FIX countries and currencies
+	
 	if ((int)MODULE_PAYMENT_FRITES_ZONE > 0 && isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
 		$custCountryCheck = isset($order) ? $order->billing['country']['id'] : $_SESSION['customer_country_id'];
 		$custZoneCheck = isset($order) ? $order->billing['zone_id'] : $_SESSION['customer_zone_id'];
@@ -70,7 +42,7 @@ if ($frites_enabled) {
 				/*AND zone_country_id = :countryId*/
 				ORDER BY zone_id';
 		$sql = $db->bindVars($sql, ':zoneId', (int)MODULE_PAYMENT_FRITES_ZONE, 'integer');
-		//$sql = $db->bindVars($sql, ':countryId', $custCountryCheck, 'integer');
+		
 		$result = $db->Execute($sql);
 
 		while (!$result->EOF) {
@@ -88,12 +60,7 @@ if ($frites_enabled) {
 		$frites_enabled = false;
 	}
 
-	// Amazon module cannot be used for purchase > $10,000 USD or 5500 GBP
-	/*if ( ($_SESSION['currency'] == 'USD' && $currencies->value($_SESSION['cart']->total, true, 'USD') > 10000)
-	  || ($_SESSION['currency'] == 'GBP' && $currencies->value($_SESSION['cart']->total, true, 'GBP') > 5500) ) {
-		$frites_enabled = false;
-	}*/
-
+	
 	if (isset($_GET['main_page']) && ($_GET['main_page'] == 'login' || $_GET['main_page'] == 'time_out')) {
 		$frites_enabled = true;
 		$only_login = true;
@@ -105,8 +72,6 @@ if ($frites_enabled) {
 
 	$frites_logged = fritesLogin();
 
-//echo '<pre>';print_r($_SERVER);echo '</pre>';
-//echo '<pre>';print_r($frites_logged);echo '</pre>';
 ?>
 
 <script type='text/javascript'>

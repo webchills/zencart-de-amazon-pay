@@ -2,10 +2,10 @@
 /**
  * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: frites.php with TransactionTimedOut Fix 2018-07-31 18:02:16Z webchills $
+ * @version $Id: frites.php 2019-05-25 09:02:16Z webchills $
  */
 
 /**
@@ -182,32 +182,7 @@ class frites {
 		
 			<input id="fritesOrderReferenceId" type="hidden" name="frites[OrderReferenceId]" value="<?php echo isset($_SESSION['frites']['OrderReferenceId'])?$_SESSION['frites']['OrderReferenceId']:'' ?>" />
 
-<?php if (defined('MODULE_PAYMENT_FRITES_HANDLER') && MODULE_PAYMENT_FRITES_HANDLER == 'sandbox' && isset($_SESSION['frites']['SandboxSimulation'])) { ?>
-	<br /><a href="http://docs.developer.amazonservices.com/en_DE/apa_guide/APAGuide_Testing.html" target="_blank"><h2>Authorization SandboxSimulation:</h2></a> <br />
-	<?php
 
-	if (isset($_SESSION['frites']['SandboxSimulation']['State']) && $_SESSION['frites']['SandboxSimulation']['State']) {
-		$SandboxSimulation['SandboxSimulation']['State'] = $_SESSION['frites']['SandboxSimulation']['State'];
-	}
-	if (isset($_SESSION['frites']['SandboxSimulation']['ReasonCode']) && $_SESSION['frites']['SandboxSimulation']['ReasonCode']) {
-		$SandboxSimulation['SandboxSimulation']['ReasonCode'] = $_SESSION['frites']['SandboxSimulation']['ReasonCode'];
-	}
-	if (isset($_SESSION['frites']['SandboxSimulation']['ExpirationTimeInMins']) && $_SESSION['frites']['SandboxSimulation']['ExpirationTimeInMins']) {
-		$SandboxSimulation['SandboxSimulation']['ExpirationTimeInMins'] = (int)$_SESSION['frites']['SandboxSimulation']['ExpirationTimeInMins'];
-	}
-	if (isset($_SESSION['frites']['SandboxSimulation']['PaymentMethodUpdateTimeInMins']) && $_SESSION['frites']['SandboxSimulation']['PaymentMethodUpdateTimeInMins']) {
-		$SandboxSimulation['SandboxSimulation']['PaymentMethodUpdateTimeInMins'] = (int)$_SESSION['frites']['SandboxSimulation']['PaymentMethodUpdateTimeInMins'];
-	}
-	?>
-	<?php echo str_ireplace(',', ', ', frites_json_encode($SandboxSimulation)) ?>
-	<?php if (isset($SandboxSimulation['SandboxSimulation']) && $SandboxSimulation['SandboxSimulation']) { ?>
-	<?php foreach ($SandboxSimulation['SandboxSimulation'] as $key => $result) { ?>
-		<?php if ($result) { ?>
-			<input type="hidden" name="frites[SandboxSimulation][<?php echo $key ?>]" value="<?php echo $result ?>" />
-		<?php } ?>
-	<?php } ?>
-	<?php } ?>
-<?php } ?>
 
 
 		</div>
@@ -262,10 +237,10 @@ class frites {
 			if (isset($fritesOrderReference['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['OrderReferenceStatus']['State'])
 					&& $fritesOrderReference['GetOrderReferenceDetailsResult']['OrderReferenceDetails']['OrderReferenceStatus']['State'] == 'Draft') {
 
-				//****SET ORDER INFO
+				//****SET ORDER INFO - Because a credit card issuer might decline a transaction when API operation parameter values are inconsistent, we set consistent amount values across all API operations and round order_total to 2 decimals
 				$fritesOrderReference = fritesSetOrderReferenceDetails(
 											$_SESSION['frites']['OrderReferenceId'],
-											$currencies->value($order->info['total']),
+											$currencies->value(round($order->info['total'], 2)),											
 											$order->info['currency'],
 											$insert_id,
 											isset($order->info['comments'])?$order->info['comments']:''
@@ -295,37 +270,12 @@ class frites {
 				
 
 				$SellerAuthorizationNote = '';
-				$SandboxSimulation = array();
+				
 
-				if (isset($_SESSION['frites']['SandboxSimulation']['State']) && $_SESSION['frites']['SandboxSimulation']['State']) {
-					$SandboxSimulation['SandboxSimulation']['State'] = trim($_SESSION['frites']['SandboxSimulation']['State']);
-				}
-
-				if ($SandboxSimulation && isset($_SESSION['frites']['SandboxSimulation']['ReasonCode']) && $_SESSION['frites']['SandboxSimulation']['ReasonCode']) {
-					$SandboxSimulation['SandboxSimulation']['ReasonCode'] = trim($_SESSION['frites']['SandboxSimulation']['ReasonCode']);
-				}
-
-				if ($SandboxSimulation && isset($_SESSION['frites']['SandboxSimulation']['ExpirationTimeInMins']) && $_SESSION['frites']['SandboxSimulation']['ExpirationTimeInMins']) {
-					$SandboxSimulation['SandboxSimulation']['ExpirationTimeInMins'] = (int)$_SESSION['frites']['SandboxSimulation']['ExpirationTimeInMins'];
-				}
-
-				if ($SandboxSimulation && isset($_SESSION['frites']['SandboxSimulation']['PaymentMethodUpdateTimeInMins']) && $_SESSION['frites']['SandboxSimulation']['PaymentMethodUpdateTimeInMins']) {
-					$SandboxSimulation['SandboxSimulation']['PaymentMethodUpdateTimeInMins'] = (int)$_SESSION['frites']['SandboxSimulation']['PaymentMethodUpdateTimeInMins'];
-				}
-
-				if (isset($_SESSION['frites']['SandboxSimulation']['ReasonCode']) && $_SESSION['frites']['SandboxSimulation']['ReasonCode'] == 'InvalidPaymentMethod') {
-					$InvalidPaymentMethod = true;
-				}
-
-				if ($SandboxSimulation) {
-					$SellerAuthorizationNote = frites_json_encode($SandboxSimulation);
-					if (isset($_POST['frites']['SandboxSimulation'])) unset($_POST['frites']['SandboxSimulation']);
-					if (isset($_SESSION['frites']['SandboxSimulation'])) unset($_SESSION['frites']['SandboxSimulation']);
-				}
-
+				// Because a credit card issuer might decline a transaction when API operation parameter values are inconsistent, we set consistent amount values across all API operations and round order_total to 2 decimals
 				$fritesAuthorize = fritesAuthorize(
 											$_SESSION['frites']['OrderReferenceId'],
-											$currencies->value($order->info['total']),
+											$currencies->value(round($order->info['total'], 2)),
 											$order->info['currency'],
 											$insert_id,
 											$SellerAuthorizationNote
@@ -347,10 +297,10 @@ class frites {
 					$_SESSION['frites_errors']['AuthorizationStatus']['State'] = $AuthorizationStatus;
 					$_SESSION['frites_errors']['AuthorizationStatus']['ReasonCode'] = $AuthorizationReasonCode;
 					
-
+         // Because a credit card issuer might decline a transaction when API operation parameter values are inconsistent, we set consistent amount values across all API operations and round order_total to 2 decimals
 						$fritesOrderReference = fritesSetOrderReferenceDetails(
 													$_SESSION['frites']['OrderReferenceId'],
-													$currencies->value($order->info['total']),
+													$currencies->value(round($order->info['total'], 2)),
 													$order->info['currency'],
 													$insert_id,
 													isset($order->info['comments'])?$order->info['comments']:''
@@ -379,10 +329,10 @@ class frites {
 					&& isset($fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'])
 					) {
 
-				//****CAPTURE
+				//****CAPTURE - Because a credit card issuer might decline a transaction when API operation parameter values are inconsistent, we set consistent amount values across all API operations and round order_total to 2 decimals
 				$fritesCapture = fritesCapture(
 					$fritesAuthorize['AuthorizeResult']['AuthorizationDetails']['AmazonAuthorizationId'],
-					$currencies->value($order->info['total']),
+					$currencies->value(round($order->info['total'], 2)),
 					$order->info['currency'],
 					$insert_id
 				);
@@ -772,7 +722,7 @@ $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
 		}
 
 		$this->check_frites_fields();
-    $db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) values ('Version', 'MODULE_PAYMENT_FRITES_MODULE_VERSION', '2.2.2', 'Version installed:', '6', 0, NOW(), NOW(), NULL, 'zen_cfg_read_only(');");
+    $db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) values ('Version', 'MODULE_PAYMENT_FRITES_MODULE_VERSION', '2.2.3', 'Version installed:', '6', 0, NOW(), NOW(), NULL, 'zen_cfg_read_only(');");
 		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_STATUS_TITLE)."', 'MODULE_PAYMENT_FRITES_STATUS', 'True', '".zen_db_input(MODULE_PAYMENT_FRITES_STATUS_DESC)."', '2', '2', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
 		$db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) values ('Zoneneinschränkung', 'MODULE_PAYMENT_FRITES_ZONE', '0', 'nicht änderbar', '6', '1', NOW(), NOW(), NULL, 'zen_cfg_read_only(');");
 		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_ID_TITLE)."', 'MODULE_PAYMENT_FRITES_ORDER_STATUS_ID', '1', '".zen_db_input(MODULE_PAYMENT_FRITES_ORDER_STATUS_ID_DESC)."', '6', '3', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
@@ -796,7 +746,7 @@ $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
 		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT_TITLE)."', 'MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT','260px', '".zen_db_input(MODULE_PAYMENT_FRITES_ADDRESSBOOK_HEIGHT_DESC)."', '6', '22', now())");
 		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH_TITLE)."', 'MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH','700px', '".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_WIDTH_DESC)."', '6', '23', now())");
 		$db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_TITLE)."', 'MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT','260px', '".zen_db_input(MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_DESC)."', '6', '24', now())");
-    $db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PHONE_REQUIRED_TITLE)."', 'MODULE_PAYMENT_FRITES_PHONE_REQUIRED', 'True', '".zen_db_input(MODULE_PAYMENT_FRITES_PHONE_REQUIRED_DESC)."', '6', '25', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    $db->Execute('insert into ' . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('".zen_db_input(MODULE_PAYMENT_FRITES_PHONE_REQUIRED_TITLE)."', 'MODULE_PAYMENT_FRITES_PHONE_REQUIRED', 'False', '".zen_db_input(MODULE_PAYMENT_FRITES_PHONE_REQUIRED_DESC)."', '6', '25', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
 		
 	}
 

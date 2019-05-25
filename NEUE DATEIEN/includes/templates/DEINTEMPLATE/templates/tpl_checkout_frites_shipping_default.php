@@ -7,10 +7,10 @@
  *
  * @package templateSystem
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_shipping_default.php 2018-03-21 14:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_shipping_default.php 2019-05-14 16:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutShipping">
@@ -18,6 +18,7 @@
 <?php echo zen_draw_form('checkout_address', $links['checkout_frites_shipping']) . zen_draw_hidden_field('action', 'process')?>
 
 <h1 id="checkoutShippingHeading"><?php echo HEADING_TITLE; ?></h1>
+<p class="amazonpayinfo"><?php echo AMAZON_PAY_INFO_TEXT; ?><?php echo '<a href="' . zen_href_link(FILENAME_AMAZON_PAY_INFO, '', 'SSL') . '">' . AMAZON_PAY_INFO_LINK . '</a>'; ?></p>
 <?php if ($messageStack->size('checkout_shipping') > 0) echo $messageStack->output('checkout_shipping'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 
@@ -195,88 +196,11 @@ function check_continue_box() {
 
 <br class="clearBoth" />
 
-<div id="shipping-box">
 
-<?php if (defined('MODULE_PAYMENT_FRITES_HANDLER') && MODULE_PAYMENT_FRITES_HANDLER == 'sandbox') { ?>
 
-<?php
-	$States = array(
-		'Closed',
-		'Declined',
-		'Pending'
-	);
-	$ReasonCodes = array(
-		'AmazonClosed',
-		'InvalidPaymentMethod',
-		'AmazonRejected',
-		'ExpiredUnused',
-		'TransactionTimedOut'
-	);
-	$PaymentMethodUpdateTimeInMins = array(
-		'1',
-		'5',
-		'30',
-		'60',
-		'120',
-		'240'
-	);
-	$ExpirationTimeInMins = array(
-		'1',
-		'5',
-		'30',
-		'60'
-	);
-?>
 
-<br /><a href="http://docs.developer.amazonservices.com/en_DE/apa_guide/APAGuide_Testing.html" target="_blank"><h2>Authorization SandboxSimulation:</h2></a> <br />
-<b>State:</b>
-<select name="frites[SandboxSimulation][State]">
-	<option value=""></option>
-	<?php foreach ($States as $result) { ?>
-	<?php if (isset($_SESSION['frites']['SandboxSimulation']['State']) && $_SESSION['frites']['SandboxSimulation']['State'] == $result) { ?>
-	<option value="<?php echo $result ?>" selected="selected"><?php echo $result ?></option>
-	<?php } else { ?>
-	<option value="<?php echo $result ?>"><?php echo $result ?></option>
-	<?php } ?>
-	<?php } ?>
-</select>
-<br /><b>State:</b>
-<select name="frites[SandboxSimulation][ReasonCode]">
-	<option value=""></option>
-	<?php foreach ($ReasonCodes as $result) { ?>
-	<?php if (isset($_SESSION['frites']['SandboxSimulation']['ReasonCode']) && $_SESSION['frites']['SandboxSimulation']['ReasonCode'] == $result) { ?>
-	<option value="<?php echo $result ?>" selected="selected"><?php echo $result ?></option>
-	<?php } else { ?>
-	<option value="<?php echo $result ?>"><?php echo $result ?></option>
-	<?php } ?>
-	<?php } ?>
-</select>
-<br /><b>PaymentMethodUpdateTimeInMins:</b>
-<select name="frites[SandboxSimulation][PaymentMethodUpdateTimeInMins]">
-	<option value=""></option>
-	<?php foreach ($PaymentMethodUpdateTimeInMins as $result) { ?>
-	<?php if (isset($_SESSION['frites']['SandboxSimulation']['PaymentMethodUpdateTimeInMins']) && $_SESSION['frites']['SandboxSimulation']['PaymentMethodUpdateTimeInMins'] == $result) { ?>
-	<option value="<?php echo $result ?>" selected="selected"><?php echo $result ?></option>
-	<?php } else { ?>
-	<option value="<?php echo $result ?>"><?php echo $result ?></option>
-	<?php } ?>
-	<?php } ?>
-</select>
-<br /><b>ExpirationTimeInMins:</b>
-<select name="frites[SandboxSimulation][ExpirationTimeInMins]">
-	<option value=""></option>
-	<?php foreach ($ExpirationTimeInMins as $result) { ?>
-	<?php if (isset($_SESSION['frites']['SandboxSimulation']['ExpirationTimeInMins']) && $_SESSION['frites']['SandboxSimulation']['ExpirationTimeInMins'] == $result) { ?>
-	<option value="<?php echo $result ?>" selected="selected"><?php echo $result ?></option>
-	<?php } else { ?>
-	<option value="<?php echo $result ?>"><?php echo $result ?></option>
-	<?php } ?>
-	<?php } ?>
-</select>
-<br/>
-<?php } ?>
 
-</div>
+
 
 <fieldset class="shipping" id="comments">
 <legend><?php echo TABLE_HEADING_COMMENTS; ?></legend>

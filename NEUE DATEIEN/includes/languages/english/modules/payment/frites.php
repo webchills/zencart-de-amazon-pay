@@ -1,7 +1,7 @@
 <?php
 define('MODULE_PAYMENT_FRITES_TEXT_TITLE', 'Pay with Amazon');
 define('MODULE_PAYMENT_FRITES_TEXT_ADMIN_TITLE', 'Pay with Amazon');
-define('MODULE_PAYMENT_FRITES_TEXT_DESCRIPTION', '<br/><img src="images/amazonpaylogo.png" alt="Amazon Pay"/><br/><br/><a href="https://pay.amazon.com/uk" target="_blank">Amazon Pay Info Site</a>');
+define('MODULE_PAYMENT_FRITES_TEXT_DESCRIPTION', '<br/><img src="images/amazonpaylogo.png" alt="Amazon Pay"/><br/><br/>Version 2.2.3<br/>NOT SCA compliant<br/><br/><a href="https://pay.amazon.com/uk" target="_blank">Amazon Pay Info Site</a>');
 define('MODULE_PAYMENT_FRITES_TEXT_LOGIN', 'Amazon Login:');
 define('MODULE_PAYMENT_FRITES_TEXT_PASSWORD', 'Password:');
 
@@ -81,4 +81,4 @@ define('MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_TITLE', 'Payment Method Heigh
 define('MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_DESC', 'in Pixel with px');
 define('MODULE_PAYMENT_FRITES_ZONE_DENIED', 'Amazon Payments are not available!');
 define('MODULE_PAYMENT_FRITES_PHONE_REQUIRED_TITLE', 'Phone Number required?');
-define('MODULE_PAYMENT_FRITES_PHONE_REQUIRED_DESC', 'Is the phone number a required field in the customer data in your store?<br/>True if yes, False if no');
+define('MODULE_PAYMENT_FRITES_PHONE_REQUIRED_DESC', 'Is the phone number a required field in the customer data in your store?<br/>True if yes, False if no<br/><br/><b>Note:</b><br/>If you are using PayPal Express with Express Button as well set this setting to False to avoid that PayPal Express customers are forced to enter their phone number during an Express checkout.');

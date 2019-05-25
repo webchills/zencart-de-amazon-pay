@@ -3,10 +3,10 @@
  * Page Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_login_default.php for Amazon Pay 2018-03-21 09:49:16Z webchills $
+ * @version $Id: tpl_login_default.php for Amazon Pay 2019-05-25 10:49:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="loginDefault">
@@ -16,19 +16,12 @@
 <?php if ($messageStack->size('login') > 0) echo $messageStack->output('login'); ?>
 
 
-<?php if ( USE_SPLIT_LOGIN_MODE == 'True' || $ec_button_enabled || (defined('MODULE_PAYMENT_AMAZON_STATUS') && MODULE_PAYMENT_AMAZON_STATUS == 'True') || (defined('MODULE_PAYMENT_FRITES_STATUS') && MODULE_PAYMENT_FRITES_STATUS == 'True')) { ?>
+<?php if ( USE_SPLIT_LOGIN_MODE == 'True' || $ec_button_enabled ) { ?>
 <!--BOF PPEC split login- DO NOT REMOVE-->
 <fieldset class="floatingBox back">
-<legend><?php echo HEADING_NEW_CUSTOMER_SPLIT; ?></legend>
-<?php // ** BEGIN PAYPAL EXPRESS CHECKOUT ** ?>
-<?php if ($ec_button_enabled) { ?>
-<div class="information"><?php echo TEXT_NEW_CUSTOMER_INTRODUCTION_SPLIT; ?></div>
+<legend><?php echo HEADING_NEW_CUSTOMER_SPLIT; ?></legend> 
 
-  <div class="center"><?php require DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/tpl_ec_button.php'; ?></div>
-<hr />
-<?php echo TEXT_NEW_CUSTOMER_POST_INTRODUCTION_DIVIDER; ?>
-<?php } ?>
-<?php // ** END PAYPAL EXPRESS CHECKOUT ** ?>
+
 <div class="information"><?php echo TEXT_NEW_CUSTOMER_POST_INTRODUCTION_SPLIT; ?></div>
 
 <?php echo zen_draw_form('create', zen_href_link(FILENAME_CREATE_ACCOUNT, (isset($_GET['gv_no']) ? '&gv_no=' . preg_replace('/[^0-9.,%]/', '', $_GET['gv_no']) : ''), 'SSL')); ?>
@@ -54,15 +47,35 @@
 </form>
 </fieldset>
 <br class="clearBoth" />
-<!--EOF PPEC split login- DO NOT REMOVE-->
-<?php // ** BEGIN AMAZON FRITES LOGIN ** ?>
+<?php
+  if ($_SESSION['cart']->count_contents() > 0) { ?>
+  	<?php
+	if (defined('MODULE_PAYMENT_FRITES_STATUS') && MODULE_PAYMENT_FRITES_STATUS == 'True') { ?>
+  	<br class="clearBoth" />	
+  	<fieldset id="amazonlogin">
+<legend><?php echo HEADING_AMAZON_CUSTOMER_SPLIT; ?></legend>
+<div class="information"><?php echo TEXT_AMAZON_CUSTOMER_SPLIT; ?></div>
+
 	<?php
 	if (defined('MODULE_PAYMENT_FRITES_STATUS') && MODULE_PAYMENT_FRITES_STATUS == 'True') {
-		include DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_login_button.php';
+		include(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/frites/tpl_login_button.php');
 	}
 	?>
-	<?php // ** END AMAZON FRITES LOGIN ** ?>
+</fieldset>
+<?php } ?>
+ <?php if ($ec_button_enabled) { ?>
+  <br class="clearBoth" />	
+  	<fieldset id="paypallogin">
+<legend><?php echo HEADING_PAYPAL_CUSTOMER_SPLIT; ?></legend>
+<div class="information"><?php echo TEXT_PAYPAL_CUSTOMER_SPLIT; ?></div>
 
+	
+	<div align="right"><?php require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/tpl_ec_button.php'); ?></div>
+
+</fieldset>
+<?php } ?>
+<?php } ?>
+<!--EOF PPEC split login- DO NOT REMOVE-->
 <?php } else { ?>
 <!--BOF normal login-->
 <?php
@@ -97,7 +110,7 @@
 
 <div class="information"><?php echo TEXT_NEW_CUSTOMER_INTRODUCTION; ?></div>
 
-<?php require $template->get_template_dir('tpl_modules_create_account.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_create_account.php'; ?>
+<?php require($template->get_template_dir('tpl_modules_create_account.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_create_account.php'); ?>
 
 </fieldset>
 

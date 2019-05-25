@@ -2,10 +2,10 @@
 /**
  * @package Amazon Pay for Zen Cart Deutsch (www.zen-cart-pro.at)
  * @copyright Copyright 2003-2014 Webiprog
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: frites_functions.php 2018-03-21 17:29:16Z webchills $
+ * @version $Id: frites_functions.php 2019-05-14 19:29:16Z webchills $
  */
 
 
@@ -108,7 +108,6 @@ class frites_functions {
 			'AWSAccessKeyId' => MODULE_PAYMENT_FRITES_ACCESSKEY_ID,
 			'Action' => 'GetOrderReferenceDetails',
 			'AmazonOrderReferenceId' => $OrderReferenceId,
-			//'AddressConsentToken' => isset($login_state['access_token'])?$login_state['access_token']:'',
 			'SellerId' => MODULE_PAYMENT_FRITES_MERCHANT_ID,
 			'SignatureMethod' => 'HmacSHA256',
 			'SignatureVersion' => '2',			
@@ -702,7 +701,8 @@ class frites_functions {
 				'mws_link' => 'mws-eu.amazonservices.com',
 				'mws_payments' => '/OffAmazonPayments_Sandbox/2013-01-01',
 				'mws_sellers' => '/Sellers/2011-07-01',
-				'widget_link' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/de/sandbox/lpa/js/Widgets.js',
+				'widget_link' => 'https://static-eu.payments-amazon.com/OffAmazonPayments/eur/sandbox/lpa/js/Widgets.js',
+				
 				'login_api_link' => 'https://api.sandbox.amazon.de',
 				'profile_api_link' => 'https://api.sandbox.amazon.de/user/profile'
 			);

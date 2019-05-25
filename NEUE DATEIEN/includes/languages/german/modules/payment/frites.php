@@ -1,7 +1,7 @@
 <?php
 define('MODULE_PAYMENT_FRITES_TEXT_TITLE', 'Mit Amazon bezahlen');
 define('MODULE_PAYMENT_FRITES_TEXT_ADMIN_TITLE', 'Mit Amazon bezahlen');
-define('MODULE_PAYMENT_FRITES_TEXT_DESCRIPTION', '<br/><img src="images/amazonpaylogo.png" alt="Amazon Pay"/><br/><br/><a href="https://pay.amazon.com/de/merchant" target="_blank">Infos zu Amazon Pay</a>');
+define('MODULE_PAYMENT_FRITES_TEXT_DESCRIPTION', '<br/><img src="images/amazonpaylogo.png" alt="Amazon Pay"/><br/><br/>Version 2.2.3<br/>NOT SCA compliant!<br/><br/><a href="https://pay.amazon.com/de/merchant" target="_blank">Infos zu Amazon Pay</a>');
 define('MODULE_PAYMENT_FRITES_TEXT_LOGIN', 'Amazon Login:');
 define('MODULE_PAYMENT_FRITES_TEXT_PASSWORD', 'Passwort:');
 define('MODULE_PAYMENT_FRITES_TEXT_ORDER_REFERENCE_ID', 'OrderReferenceId:');
@@ -65,4 +65,4 @@ define('MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_TITLE', 'Zahlungsart-Höhe');
 define('MODULE_PAYMENT_FRITES_PAYMENTMETHOD_HEIGHT_DESC', 'Geben Sie hier die gewünschte Höhe des iFrames für die Amazon Zahlungsart an. Angabe in Pixel mit px');
 define('MODULE_PAYMENT_FRITES_ZONE_DENIED', 'Amazon Payments sind nicht verfügbar!');
 define('MODULE_PAYMENT_FRITES_PHONE_REQUIRED_TITLE', 'Telefonnummer erforderlich?');
-define('MODULE_PAYMENT_FRITES_PHONE_REQUIRED_DESC', 'Ist in Ihrem Shop die Telefonnummer in den Kundendaten ein Pflichtfeld?<br/>True falls ja, False falls nein');
+define('MODULE_PAYMENT_FRITES_PHONE_REQUIRED_DESC', 'Ist in Ihrem Shop die Telefonnummer in den Kundendaten ein Pflichtfeld?<br/>True falls ja, False falls nein<br/><br/><b>Hinweis:</b><br/>Falls Sie im Shop auch PayPal Express mit Express Checkout Button nutzen, lassen Sie diese Einstellung auf false, da sonst der PayPal Express Checkout unnötig verlängert wird. Außer die Telefonnummer ist für Sie ein absolutes Muss.');
