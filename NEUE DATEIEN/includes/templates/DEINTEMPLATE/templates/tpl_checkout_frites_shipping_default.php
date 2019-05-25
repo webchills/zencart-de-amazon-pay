@@ -10,7 +10,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_frites_shipping_default.php 2019-05-14 16:08:16Z webchills $
+ * @version $Id: tpl_checkout_frites_shipping_default.php 2019-05-25 11:08:16Z webchills $
  */
 ?>
 <div class="centerColumn" id="checkoutShipping">
@@ -18,7 +18,7 @@
 <?php echo zen_draw_form('checkout_address', $links['checkout_frites_shipping']) . zen_draw_hidden_field('action', 'process')?>
 
 <h1 id="checkoutShippingHeading"><?php echo HEADING_TITLE; ?></h1>
-<p class="amazonpayinfo"><?php echo AMAZON_PAY_INFO_TEXT; ?><?php echo '<a href="' . zen_href_link(FILENAME_AMAZON_PAY_INFO, '', 'SSL') . '">' . AMAZON_PAY_INFO_LINK . '</a>'; ?></p>
+<p class="amazonpayinfo"><?php echo AMAZON_PAY_INFO_TEXT; ?><?php echo '<a href="' . zen_href_link(FILENAME_AMAZON_PAY_INFO, '', 'SSL') . '" target="_blank">' . AMAZON_PAY_INFO_LINK . '</a>'; ?></p>
 <?php if ($messageStack->size('checkout_shipping') > 0) echo $messageStack->output('checkout_shipping'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 
